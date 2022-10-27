@@ -11,6 +11,7 @@ ExpansionPanel makeColorTile(
   }
 
   return ExpansionPanel(
+      canTapOnHeader: true,
       body: Container(
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(16)),

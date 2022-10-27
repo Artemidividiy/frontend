@@ -32,7 +32,10 @@ class BasicGenerator extends ColorGenerator {
 
 class ToneGenerator extends ColorGenerator {
   @override
-  Color generate({Color? baseColor, double? distance = 0}) {
-    return Color.lerp(baseColor, Colors.white, distance ?? 0.5) ?? Colors.black;
+  Color generate(
+      {Color? baseColor, double? distance = 0, bool? toBlack = false}) {
+    return toBlack! == true
+        ? Color.lerp(baseColor, Colors.black, distance ?? 0.5) ?? Colors.black
+        : Color.lerp(baseColor, Colors.white, distance ?? 0.5) ?? Colors.black;
   }
 }

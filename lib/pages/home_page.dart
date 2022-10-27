@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:colorful/controllers/colorController.dart';
 import 'package:colorful/models/color.dart';
 import 'package:colorful/utils/color_generator_local.dart';
 import 'package:flutter/material.dart';
@@ -24,73 +21,125 @@ class _HomePageState extends State<HomePage> {
   late int currentScheme;
   late List<bool> isOpened;
   late List<ExpansionPanel> items;
+
+  _normalizeColor(ColorModel color) {
+    return "${color.color.red} ${color.color.green} ${color.color.blue}";
+  }
+
   @override
   void initState() {
     currentScheme = 0;
-    ToneGenerator tg = ToneGenerator();
     isOpened = List.generate(5, (index) => false);
-    items = List.generate(5, (index) {
-      Color color = tg.generate(
-          baseColor: colorsToRandom[currentScheme], distance: index * 0.1);
-      return makeColorTile(
-          isExpanded: isOpened[index],
-          context: context,
-          color: ColorModel(
-              color: color,
-              name: color.toString(),
-              rgb: Group([color.red, color.green, color.blue])));
-    });
     super.initState();
-  }
-
-  Future<void> redraw() async {
-    ToneGenerator tg = ToneGenerator();
-    setState(() {
-      currentScheme == 3 ? currentScheme = 0 : currentScheme++;
-      items = List.generate(10, (index) {
-        Color color = tg.generate(
-            baseColor: colorsToRandom[currentScheme], distance: index * 0.1);
-        return makeColorTile(
-            isExpanded: false,
-            context: context,
-            color: ColorModel(
-                color: color,
-                name: color.toString(),
-                rgb: Group([color.red, color.green, color.blue])));
-      });
-      isOpened = List.generate(items.length, (index) => false);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: IconButton(
-          onPressed: () async {
-            List<ColorModel>? colors =
-                await MultipleColorController.getColors();
-            if (colors != null) {
-              isOpened = List.generate(5, (index) => false);
-              setState(() {
-                items = List.generate(
-                    colors.length,
-                    (index) => makeColorTile(
-                        isExpanded: isOpened[index],
-                        context: context,
-                        color: colors[index]));
-              });
-            }
-          },
-          icon: Icon(Icons.add)),
-
       body: SingleChildScrollView(
         child: ExpansionPanelList(
           expansionCallback: (panelIndex, isExpanded) {
             setState(() {
-              isOpened[panelIndex] = isExpanded;
+              isOpened[panelIndex] = !isExpanded;
             });
           },
-          children: items,
+          children: List.generate(5, (index) {
+            ToneGenerator tg = ToneGenerator();
+            Color c = tg.generate(
+                baseColor: colorsToRandom[currentScheme],
+                distance: index * 0.1);
+            ColorModel color = ColorModel(
+                color: c,
+                name: c.toString(),
+                rgb: Group([c.red, c.green, c.blue]));
+            return ExpansionPanel(
+                canTapOnHeader: true,
+                body: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('cmyk: ${color.cmyk}'),
+                      Text('hsv: ${color.hsv}'),
+                      Text('Tones:'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(10, (tindex) {
+                          if (tindex > 4) {
+                            Color temp = ToneGenerator().generate(
+                                baseColor: color.color, distance: tindex * 0.1);
+                            ColorModel tcolor = ColorModel(
+                                color: temp,
+                                name: index.toString(),
+                                rgb: Group([255, 255, 255]));
+                            return Container(
+                              color: temp,
+                              // constraints: BoxConstraints.tight(Size(100, 100)),
+                              child: Text(
+                                  '${color.color.computeLuminance().toStringAsFixed(3)}'),
+                            );
+                          } else {
+                            Color temp = ToneGenerator().generate(
+                                baseColor: color.color,
+                                distance: tindex * 0.3,
+                                toBlack: true);
+                            ColorModel tcolor = ColorModel(
+                                color: temp,
+                                name: index.toString(),
+                                rgb: Group([255, 255, 255]));
+                            return Container(
+                              color: temp,
+                              // constraints: BoxConstraints.tight(Size(100, 100)),
+                              child: Text(
+                                  '${color.color.computeLuminance().toStringAsFixed(3)}'),
+                            );
+                          }
+                        }),
+                      ),
+                      TextButton(onPressed: null, child: Text("collapse"))
+                    ],
+                  ),
+                ),
+                isExpanded: isOpened[index],
+                headerBuilder: (c, isExpanded) => Container(
+                    constraints:
+                        BoxConstraints.tight(Size(Size.infinite.width, 120)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: color.color),
+                    alignment: Alignment.center,
+                    child:
+                        Text('${color.name} (rgb : ${_normalizeColor(color)})',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: ThemeData.estimateBrightnessForColor(
+                                          color.color) ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                            )))
+
+                // child: Container(
+                //   constraints: BoxConstraints.tight(Size(Size.infinite.width, 120)),
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(16),
+                //       color: widget.color.color),
+                //   alignment: Alignment.center,
+                //   child: Text('${widget.color.name} (rgb : ${_normalizeColor()})',
+                //       style: TextStyle(
+                //         fontSize: 18,
+                //         color:
+                //             ThemeData.estimateBrightnessForColor(widget.color.color) ==
+                //                     Brightness.light
+                //                 ? Colors.black
+                //                 : Colors.white,
+                //       )),
+                // ),
+                );
+          }),
         ),
       ),
 
