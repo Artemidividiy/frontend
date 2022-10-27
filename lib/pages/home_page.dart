@@ -1,8 +1,17 @@
-import 'package:colorful/components/colorTile.dart';
+import 'dart:developer';
+
+import 'package:colorful/controllers/colorController.dart';
 import 'package:colorful/models/color.dart';
 import 'package:colorful/utils/color_generator_local.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import '../components/colorTile2.0.dart';
+
+List<Color> colorsToRandom = [
+  Colors.indigo,
+  Colors.black,
+  Colors.amber,
+  Colors.cyan
+];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,13 +21,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<Widget> items;
+  late int currentScheme;
+  late List<bool> isOpened;
+  late List<ExpansionPanel> items;
   @override
   void initState() {
+    currentScheme = 0;
     ToneGenerator tg = ToneGenerator();
-    items = List.generate(10, (index) {
-      Color color = tg.generate(baseColor: Colors.black, distance: index * 0.1);
-      return ColorTile(color: ColorModel(color: color, name: color.toString()));
+    isOpened = List.generate(5, (index) => false);
+    items = List.generate(5, (index) {
+      Color color = tg.generate(
+          baseColor: colorsToRandom[currentScheme], distance: index * 0.1);
+      return makeColorTile(
+          isExpanded: isOpened[index],
+          context: context,
+          color: ColorModel(
+              color: color,
+              name: color.toString(),
+              rgb: Group([color.red, color.green, color.blue])));
     });
     super.initState();
   }
@@ -26,23 +46,54 @@ class _HomePageState extends State<HomePage> {
   Future<void> redraw() async {
     ToneGenerator tg = ToneGenerator();
     setState(() {
+      currentScheme == 3 ? currentScheme = 0 : currentScheme++;
       items = List.generate(10, (index) {
-        Color color =
-            tg.generate(baseColor: Colors.indigo, distance: index * 0.1);
-        return ColorTile(
-            color: ColorModel(color: color, name: color.toString()));
+        Color color = tg.generate(
+            baseColor: colorsToRandom[currentScheme], distance: index * 0.1);
+        return makeColorTile(
+            isExpanded: false,
+            context: context,
+            color: ColorModel(
+                color: color,
+                name: color.toString(),
+                rgb: Group([color.red, color.green, color.blue])));
       });
+      isOpened = List.generate(items.length, (index) => false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-          child: ListView(
-            children: items,
-          ),
-          onRefresh: redraw),
+      floatingActionButton: IconButton(
+          onPressed: () async {
+            List<ColorModel>? colors =
+                await MultipleColorController.getColors();
+            if (colors != null) {
+              isOpened = List.generate(5, (index) => false);
+              setState(() {
+                items = List.generate(
+                    colors.length,
+                    (index) => makeColorTile(
+                        isExpanded: isOpened[index],
+                        context: context,
+                        color: colors[index]));
+              });
+            }
+          },
+          icon: Icon(Icons.add)),
+
+      body: SingleChildScrollView(
+        child: ExpansionPanelList(
+          expansionCallback: (panelIndex, isExpanded) {
+            setState(() {
+              isOpened[panelIndex] = isExpanded;
+            });
+          },
+          children: items,
+        ),
+      ),
+
       // body:
     );
   }

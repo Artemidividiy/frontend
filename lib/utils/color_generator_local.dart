@@ -31,16 +31,6 @@ class BasicGenerator extends ColorGenerator {
 }
 
 class ToneGenerator extends ColorGenerator {
-  // Color _baseColor;
-  // double? _distance;
-
-  // ToneGenerator({required Color baseColor, double? distance})
-  //     : _baseColor = baseColor,
-  //       _distance = distance;
-
-  // Color get baseColor => _baseColor;
-  // double? get distance => _distance;
-
   @override
   Color generate({Color? baseColor, double? distance = 0}) {
     return Color.lerp(baseColor, Colors.white, distance ?? 0.5) ?? Colors.black;
