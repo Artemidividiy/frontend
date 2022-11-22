@@ -12,56 +12,63 @@ class DecideCard extends StatefulWidget {
 }
 
 class _DecideCardState extends State<DecideCard> {
-  late Future<List<ColorTile>> tiles;
+  Future<List<ColorModel>?>? _scheme;
 
   @override
   void initState() {
     super.initState();
-    WidgetsFlutterBinding().addPostFrameCallback((timeStamp) {
-      log(timeStamp.toString());
-      getColors();
-    });
+    _scheme = MultipleColorController.getColors();
+  }
+
+  @override
+  void didUpdateWidget(covariant DecideCard oldWidget) {
+    return;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Text("Do you find this color scheme attractive"),
-          FutureBuilder<List<ColorTile>>(
-              future: tiles,
-              builder: (context, snapshot) {
-                if (snapshot.hasData)
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: snapshot.data!,
-                    ),
-                  );
-                return CircularProgressIndicator();
-              }),
-          Row(
-            children: [
-              TextButton.icon(
-                  onPressed: null,
-                  icon: Icon(Icons.check),
-                  label: Text("Good")),
-              TextButton.icon(
-                  onPressed: null,
-                  icon: Icon(Icons.delete),
-                  label: Text("Awful"))
-            ],
-          )
-        ],
-      ),
-    );
-  }
+    return Container(
+        padding: EdgeInsets.all(8),
+        constraints: BoxConstraints.loose(Size(300, 450)),
+        decoration: BoxDecoration(
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.white),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Do you find this color scheme attractive"),
+            FutureBuilder<List<ColorModel>?>(
+                future: _scheme,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null)
+                    return SingleChildScrollView(
+                        child: Column(
+                            children: List.generate(
+                                snapshot.data!.length,
+                                (index) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ColorTile(
+                                          color: snapshot.data![index]),
+                                    ))));
 
-  void getColors() async {
-    Future<List<ColorModel>?> colors = MultipleColorController.getColors();
-    tiles = Future.sync(List.generate(
-            5, (index) => ColorTile(color: Future.sync(colors)[index])))
-        .then((value) => tiles = value);
+                  return CircularProgressIndicator();
+                }),
+            Row(
+              children: [
+                TextButton.icon(
+                    onPressed: null,
+                    icon: Icon(Icons.check),
+                    label: Text("Good")),
+                TextButton.icon(
+                    onPressed: null,
+                    icon: Icon(Icons.delete),
+                    label: Text("Awful"))
+              ],
+            )
+          ],
+        ));
   }
 }
 
@@ -72,10 +79,12 @@ class ColorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: color!.color, borderRadius: BorderRadius.circular(16)),
       child: Column(
         children: [Text(color!.name), Text(color!.rgb.toString())],
       ),
-      decoration: BoxDecoration(color: color!.color),
     );
   }
 }

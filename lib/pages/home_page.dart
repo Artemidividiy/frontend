@@ -123,32 +123,16 @@ class _HomePageState extends State<HomePage> {
                                       Brightness.light
                                   ? Colors.black
                                   : Colors.white,
-                            )))
-
-                // child: Container(
-                //   constraints: BoxConstraints.tight(Size(Size.infinite.width, 120)),
-                //   decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(16),
-                //       color: widget.color.color),
-                //   alignment: Alignment.center,
-                //   child: Text('${widget.color.name} (rgb : ${_normalizeColor()})',
-                //       style: TextStyle(
-                //         fontSize: 18,
-                //         color:
-                //             ThemeData.estimateBrightnessForColor(widget.color.color) ==
-                //                     Brightness.light
-                //                 ? Colors.black
-                //                 : Colors.white,
-                //       )),
-                // ),
-                );
+                            ))));
           }),
         ),
       ),
-
-      // body:
     );
   }
 
-  void fetch() {}
+  void fetch() {
+    setState(() {
+      currentScheme = (currentScheme + 1) % colorsToRandom.length;
+    });
+  }
 }

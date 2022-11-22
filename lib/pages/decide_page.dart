@@ -1,7 +1,4 @@
 import 'dart:developer';
-
-import 'package:colorful/controllers/colorController.dart';
-import 'package:colorful/models/color.dart';
 import 'package:colorful/pages/decide_card.dart';
 import 'package:colorful/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -26,24 +23,29 @@ class _DecidePageState extends State<DecidePage> {
             likeAction: () => log("good👍"),
             nopeAction: () => log("nope🤮"),
             superlikeAction: null));
-    _matchEngine = MatchEngine();
+    _matchEngine = MatchEngine(swipeItems: _items);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SwipeCards(
-          matchEngine: _matchEngine,
-          onStackFinished: () {
-            log("finished");
-            Navigator.of(context).pushReplacement(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  HomePage(),
-            ));
-          },
-          itemBuilder: (context, index) =>
-              Container(child: _items![index].content)),
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints.loose(Size(250, 450)),
+          child: SwipeCards(
+              matchEngine: _matchEngine,
+              onStackFinished: () {
+                log("finished");
+                Navigator.of(context).pushReplacement(PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HomePage(),
+                ));
+              },
+              itemBuilder: (context, index) =>
+                  Container(child: _items![index].content)),
+        ),
+      ),
     );
   }
 }
