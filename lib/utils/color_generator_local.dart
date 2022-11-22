@@ -20,7 +20,7 @@ class BasicGenerator extends ColorGenerator {
   }
 
   @override
-  Color generate() {
+  Color generate({int? alpha}) {
     Random random = Random();
     int r = random.nextInt(256),
         g = random.nextInt(256),

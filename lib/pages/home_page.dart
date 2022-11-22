@@ -1,7 +1,7 @@
 import 'package:colorful/models/color.dart';
 import 'package:colorful/utils/color_generator_local.dart';
 import 'package:flutter/material.dart';
-import '../components/colorTile2.0.dart';
+import '../components/colorTile.dart';
 
 List<Color> colorsToRandom = [
   Colors.indigo,
@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late int currentScheme;
   late List<bool> isOpened;
-  late List<ExpansionPanel> items;
 
   _normalizeColor(ColorModel color) {
     return "${color.color.red} ${color.color.green} ${color.color.blue}";
@@ -36,6 +35,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: IconButton(
+        icon: Icon(Icons.add),
+        onPressed: fetch,
+      ),
       body: SingleChildScrollView(
         child: ExpansionPanelList(
           expansionCallback: (panelIndex, isExpanded) {
@@ -146,4 +149,6 @@ class _HomePageState extends State<HomePage> {
       // body:
     );
   }
+
+  void fetch() {}
 }
