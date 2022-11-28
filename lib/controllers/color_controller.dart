@@ -26,6 +26,13 @@ enum ALGO {
   quad
 }
 
+String _algoNameParser(ALGO algo) {
+  String target = algo.name.replaceAllMapped(
+      RegExp(r'[A-Z]'), (match) => "-${match[0]!.toLowerCase()}");
+  log(target);
+  return target;
+}
+
 const String BASE_PATH = "https://www.thecolorapi.com/";
 
 class ColorController {
@@ -71,7 +78,7 @@ class ColorController {
 }
 
 class MultipleColorController with parser {
-  static Future<List<ColorModel>?> getColors(
+  static Future<List<ColorModel>?> getRandomColorsWithAlgo(
       {ALGO? algo = ALGO.analogic}) async {
     log("trying to get scheme");
     try {
@@ -80,7 +87,7 @@ class MultipleColorController with parser {
       var response = await http.get(Uri.parse(BASE_PATH +
           "scheme?" +
           _normalizeColor(color) +
-          "format=json&mode=${algo!.name}&count=5"));
+          "format=json&mode=${_algoNameParser(algo!)}&count=5"));
       var data = json.decode(response.body);
       for (var element in data['colors']) {
         target.add(

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:colorful/controllers/colorController.dart';
+import 'package:colorful/controllers/color_controller.dart';
 import 'package:colorful/models/color.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class _DecideCardState extends State<DecideCard> {
   @override
   void initState() {
     super.initState();
-    _scheme = MultipleColorController.getColors();
+    _scheme = MultipleColorController.getRandomColorsWithAlgo();
   }
 
   @override
