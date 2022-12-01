@@ -51,39 +51,57 @@ class _HomePageState extends State<HomePage> {
                   FilterChip(
                       label: const Text("monochrome"),
                       selected: ALGO.monochrome == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.monochrome;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.monochrome;
+                        });
+                        fetch();
+                      }),
                   FilterChip(
                       label: const Text("analogic"),
                       selected: ALGO.analogic == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.analogic;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.analogic;
+                        });
+                        fetch();
+                      }),
                   FilterChip(
                       label: const Text("complement"),
                       selected: ALGO.complement == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.complement;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.complement;
+                        });
+                        fetch();
+                      }),
                   FilterChip(
                       label: const Text("analogic-complement"),
                       selected: ALGO.analogicComplement == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.analogicComplement;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.analogicComplement;
+                        });
+                        fetch();
+                      }),
                   FilterChip(
                       label: const Text("triad"),
                       selected: ALGO.triad == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.triad;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.triad;
+                        });
+                        fetch();
+                      }),
                   FilterChip(
                       label: const Text("quad"),
                       selected: ALGO.quad == algo ? true : false,
-                      onSelected: (value) => setState(() {
-                            algo = ALGO.quad;
-                          })),
+                      onSelected: (value) {
+                        setState(() {
+                          algo = ALGO.quad;
+                        });
+                        fetch();
+                      }),
                 ],
               ),
             ),
@@ -101,6 +119,7 @@ class _HomePageState extends State<HomePage> {
                         return ExpansionPanel(
                             canTapOnHeader: true,
                             body: Container(
+                              margin: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16)),

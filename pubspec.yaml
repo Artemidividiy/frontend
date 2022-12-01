@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.5
   expandable: ^5.0.1
   swipe_cards: ^1.0.0
+  flutter_hooks: ^0.18.5+1
 
 dev_dependencies:
   flutter_test:
