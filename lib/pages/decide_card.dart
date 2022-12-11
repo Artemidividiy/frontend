@@ -32,7 +32,7 @@ class _DecideCardState extends State<DecideCard> {
         padding: EdgeInsets.all(8),
         constraints: BoxConstraints.loose(Size(300, 450)),
         decoration: BoxDecoration(
-            border: Border.all(),
+            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(16),
             color: Colors.white),
         child: Column(
@@ -56,15 +56,16 @@ class _DecideCardState extends State<DecideCard> {
                   return CircularProgressIndicator();
                 }),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
                     onPressed: null,
-                    icon: Icon(Icons.check),
-                    label: Text("Good")),
+                    icon: Icon(Icons.arrow_left_rounded),
+                    label: Text("Awful")),
                 TextButton.icon(
                     onPressed: null,
-                    icon: Icon(Icons.delete),
-                    label: Text("Awful"))
+                    icon: Icon(Icons.arrow_right_rounded),
+                    label: Text("Good"))
               ],
             )
           ],
@@ -83,7 +84,26 @@ class ColorTile extends StatelessWidget {
       decoration: BoxDecoration(
           color: color!.color, borderRadius: BorderRadius.circular(16)),
       child: Column(
-        children: [Text(color!.name), Text(color!.rgb.toString())],
+        children: [
+          Text(
+            color!.name,
+            style: TextStyle(
+              color: ThemeData.estimateBrightnessForColor(color!.color) ==
+                      Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+          ),
+          Text(
+            color!.rgb.toString(),
+            style: TextStyle(
+              color: ThemeData.estimateBrightnessForColor(color!.color) ==
+                      Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+          )
+        ],
       ),
     );
   }

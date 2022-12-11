@@ -1,3 +1,4 @@
+import 'package:colorful/components/expandable_tile.dart';
 import 'package:colorful/controllers/color_controller.dart';
 import 'package:colorful/models/color.dart';
 import 'package:colorful/utils/color_generator_local.dart';
@@ -109,20 +110,17 @@ class _HomePageState extends State<HomePage> {
                 future: currentScheme,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return ExpansionPanelList(
-                      expansionCallback: (panelIndex, isExpanded) {
-                        setState(() {
-                          isOpened[panelIndex] = !isExpanded;
-                        });
-                      },
+                    return Column(
                       children: List.generate(5, (index) {
-                        return ExpansionPanel(
-                            canTapOnHeader: true,
+                        return ExpandableTile(
                             body: Container(
                               margin: EdgeInsets.all(8),
+                              padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16)),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Colors.grey),
+                                color: Colors.white,
+                              ),
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -131,9 +129,9 @@ class _HomePageState extends State<HomePage> {
                                   Text('cmyk: ${snapshot.data![index].cmyk}'),
                                   Text('hsv: ${snapshot.data![index].hsv}'),
                                   const Text('Tones:'),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 5,
                                     children: List.generate(10, (tindex) {
                                       if (tindex > 4) {
                                         Color temp = ToneGenerator().generate(
@@ -145,12 +143,26 @@ class _HomePageState extends State<HomePage> {
                                             name: index.toString(),
                                             rgb: Group([255, 255, 255]));
                                         return Container(
-                                          color: temp,
+                                          decoration: BoxDecoration(
+                                              color: temp,
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          margin: EdgeInsets.all(8),
+                                          padding: EdgeInsets.all(4),
                                           // constraints: BoxConstraints.tight(Size(100, 100)),
-                                          child: Text(snapshot
-                                              .data![index].color
-                                              .computeLuminance()
-                                              .toStringAsFixed(3)),
+                                          child: Text(
+                                            snapshot.data![index].color
+                                                .computeLuminance()
+                                                .toStringAsFixed(3),
+                                            style: TextStyle(
+                                              color: ThemeData
+                                                          .estimateBrightnessForColor(
+                                                              temp) ==
+                                                      Brightness.light
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
                                         );
                                       } else {
                                         Color temp = ToneGenerator().generate(
@@ -163,12 +175,27 @@ class _HomePageState extends State<HomePage> {
                                             name: index.toString(),
                                             rgb: Group([255, 255, 255]));
                                         return Container(
-                                          color: temp,
+                                          padding: EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                              color: temp,
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          margin: EdgeInsets.all(8),
+
                                           // constraints: BoxConstraints.tight(Size(100, 100)),
-                                          child: Text(snapshot
-                                              .data![index].color
-                                              .computeLuminance()
-                                              .toStringAsFixed(3)),
+                                          child: Text(
+                                            snapshot.data![index].color
+                                                .computeLuminance()
+                                                .toStringAsFixed(3),
+                                            style: TextStyle(
+                                              color: ThemeData
+                                                          .estimateBrightnessForColor(
+                                                              temp) ==
+                                                      Brightness.light
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
                                         );
                                       }
                                     }),
@@ -179,12 +206,10 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                            isExpanded: isOpened[index],
-                            headerBuilder: (c, isExpanded) => Container(
+                            header: Container(
                                 constraints: BoxConstraints.tight(
                                     Size(Size.infinite.width, 120)),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
                                     color: snapshot.data![index].color),
                                 alignment: Alignment.center,
                                 child: Text(

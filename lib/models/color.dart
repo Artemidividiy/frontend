@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-typedef onCall = dynamic Function(List arguments);
-
 class Group {
   List<int> items;
   Group(
