@@ -240,7 +240,6 @@ class _HomePageState extends State<HomePage> {
     if (target != null)
       setState(() {
         currentScheme = target;
-
         // currentScheme = target;
       });
   }
