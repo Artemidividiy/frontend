@@ -5,7 +5,9 @@ import 'dart:math';
 import 'package:colorful/models/color.dart';
 
 class ColorParser {
-  static Group rgbToHsv({required Group rgb}) {}
+  static Group rgbToHsv({required Group rgb}) {
+    throw UnimplementedError();
+  }
 
   static Group rgbToCmyk({required Group rgb}) {
     double new_r = rgb[0].toDouble() / 255;
@@ -15,13 +17,24 @@ class ColorParser {
     double c = (1 - new_r - k) / (1 - k);
     double m = (1 - new_g - k) / (1 - k);
     double y = (1 - new_b - k) / (1 - k);
-    return Group([c, m, y, k.toDouble()]);
+    return Group([c.round(), m.round(), y.round(), k.toDouble().round()]);
   }
 
-  static Group HsvToRgb({required Group hsv}) {}
-  static Group HsvToCmyk({required Group hsv}) {}
-  static Group CmykToRgb({required Group cmyk}) {}
-  static Group CmykToHsv({required Group cmyk}) {}
+  static Group HsvToRgb({required Group hsv}) {
+    throw UnimplementedError();
+  }
+
+  static Group HsvToCmyk({required Group hsv}) {
+    throw UnimplementedError();
+  }
+
+  static Group CmykToRgb({required Group cmyk}) {
+    throw UnimplementedError();
+  }
+
+  static Group CmykToHsv({required Group cmyk}) {
+    throw UnimplementedError();
+  }
 }
 
 extension ListMax on List {

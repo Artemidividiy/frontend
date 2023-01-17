@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:colorful/pages/decide_card.dart';
-import 'package:colorful/pages/home_page.dart';
+import 'package:colorful/core/entry/views/decide_card.dart';
+import 'package:colorful/core/home/views/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 

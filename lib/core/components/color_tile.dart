@@ -1,5 +1,5 @@
 import 'package:colorful/models/color.dart';
-import 'package:colorful/pages/home_page.dart';
+import 'package:colorful/core/home/views/HomePage.dart';
 import 'package:flutter/material.dart';
 
 ExpansionPanel makeColorTile(

@@ -9,13 +9,13 @@ import 'package:colorful/models/constants/pocketbase.dart';
 import 'package:colorful/models/enums/status.dart';
 
 class Group {
-  List<double> items;
+  List<int> items;
   Group(
     this.items,
   );
 
   Group copyWith({
-    List<double>? items,
+    List<int>? items,
   }) {
     return Group(
       items ?? this.items,
@@ -30,7 +30,7 @@ class Group {
 
   factory Group.fromMap(Map<String, dynamic> map) {
     return Group(
-      List<double>.from(map['items']),
+      List<int>.from(map['items']),
     );
   }
 
@@ -51,7 +51,7 @@ class Group {
   @override
   int get hashCode => items.hashCode;
 
-  double operator [](int index) => items[index];
+  int operator [](int index) => items[index];
 }
 
 class ColorModel {
@@ -121,6 +121,7 @@ class ColorModel {
 
   factory ColorModel.fromRGB({required Group rgb}) => ColorModel(
       color: Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1), name: "Unknown");
+
   @override
   int get hashCode =>
       color.hashCode ^
@@ -128,38 +129,41 @@ class ColorModel {
       rgb.hashCode ^
       hsv.hashCode ^
       name.hashCode;
-  Future<ColorModel> getColor({required Group rgbCollection}) async {
-    try {
-      final pb = PocketBase(PocketBaseConstants.baseURL);
-      final records = await pb.collection('colors').getFullList(
-            batch: 200,
-            sort: '-created',
-          );
-      for (var element in records) {
-        if(element in records) {
 
-        }
-      }
-    } catch (e) {
-      return ColorModel(
-          color: Color.fromRGBO(
-              rgbCollection[0], rgbCollection[1], rgbCollection[2], 1),
-          name: "Unknown");
-    }
+  Future<ColorModel> getColor({required Group rgbCollection}) async {
+    //? i don't get for what it is
+    // try {
+    //   final pb = PocketBase(PocketBaseConstants.baseURL);
+    //   final records = await pb.collection('colors').getFullList(
+    //         batch: 200,
+    //         sort: '-created',
+    //       );
+    //   // for (var element in records) {
+    //   //   if(element in records) {
+
+    //   //   }
+    //   // }
+    // } catch (e) {
+    return ColorModel(
+        color: Color.fromRGBO(
+            rgbCollection[0], rgbCollection[1], rgbCollection[2], 1),
+        name: "Unknown");
+    // }
   }
+
   Future<Status> pushColor({required ColorModel color}) async {
     Status target = Status.waiting;
     try {
       target = Status.pushing;
       final pb = PocketBase(PocketBaseConstants.baseURL);
       final body = <String, dynamic>{
-  "name": color.name,
-  "r_value": color.rgb![0],
-  "g_value": color.rgb![1],
-  "b_value": color.rgb![2]
-};
-    final record = await pb.collection('colors').create(body: body);  
-    return Status.completed;
+        "name": color.name,
+        "r_value": color.rgb![0],
+        "g_value": color.rgb![1],
+        "b_value": color.rgb![2]
+      };
+      final record = await pb.collection('colors').create(body: body);
+      return Status.completed;
     } catch (e) {
       log("error:", error: e);
       return Status.error;

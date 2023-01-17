@@ -1,7 +1,7 @@
-import 'package:colorful/components/expandable_tile.dart';
+import 'package:colorful/core/components/expandable_tile.dart';
 import 'package:colorful/controllers/color_controller.dart';
 import 'package:colorful/models/color.dart';
-import 'package:colorful/utils/color_generator_local.dart';
+import 'package:colorful/utilities/color_generator_local.dart';
 import 'package:flutter/material.dart';
 
 List<Color> colorsToRandom = [

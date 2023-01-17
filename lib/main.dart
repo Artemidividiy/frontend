@@ -1,8 +1,8 @@
-import 'package:colorful/pages/decide_card.dart';
+import 'package:colorful/core/entry/views/decide_card.dart';
 import 'package:flutter/material.dart';
-
-import 'pages/decide_page.dart';
-import 'pages/home_page.dart';
+  
+import 'core/entry/views/decide_page.dart';
+import 'core/home/views/HomePage.dart';
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();

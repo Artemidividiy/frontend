@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:colorful/utils/color_generator_local.dart';
+import 'package:colorful/utilities/color_generator_local.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../models/color.dart';
