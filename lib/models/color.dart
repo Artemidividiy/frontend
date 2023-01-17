@@ -4,9 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pocketbase/pocketbase.dart';
-
-import 'package:colorful/models/constants/pocketbase.dart';
-import 'package:colorful/models/enums/status.dart';
+import 'package:colorful/enums/status.dart';
 
 class Group {
   List<int> items;
@@ -150,23 +148,23 @@ class ColorModel {
         name: "Unknown");
     // }
   }
-
-  Future<Status> pushColor({required ColorModel color}) async {
-    Status target = Status.waiting;
-    try {
-      target = Status.pushing;
-      final pb = PocketBase(PocketBaseConstants.baseURL);
-      final body = <String, dynamic>{
-        "name": color.name,
-        "r_value": color.rgb![0],
-        "g_value": color.rgb![1],
-        "b_value": color.rgb![2]
-      };
-      final record = await pb.collection('colors').create(body: body);
-      return Status.completed;
-    } catch (e) {
-      log("error:", error: e);
-      return Status.error;
-    }
-  }
+  //! deprecated boi
+  // Future<Status> pushColor({required ColorModel color}) async {
+  //   Status target = Status.waiting;
+  //   try {
+  //     target = Status.pushing;
+  //     final pb = PocketBase(PocketBaseConstants.baseURL);
+  //     final body = <String, dynamic>{
+  //       "name": color.name,
+  //       "r_value": color.rgb![0],
+  //       "g_value": color.rgb![1],
+  //       "b_value": color.rgb![2]
+  //     };
+  //     final record = await pb.collection('colors').create(body: body);
+  //     return Status.completed;
+  //   } catch (e) {
+  //     log("error:", error: e);
+  //     return Status.error;
+  //   }
+  // }
 }

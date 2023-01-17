@@ -1,8 +1,10 @@
 import 'package:colorful/core/components/expandable_tile.dart';
-import 'package:colorful/controllers/color_controller.dart';
+import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
 import 'package:colorful/models/color.dart';
 import 'package:colorful/utilities/color_generator_local.dart';
 import 'package:flutter/material.dart';
+
+import '../../../enums/algo.dart';
 
 List<Color> colorsToRandom = [
   Colors.indigo,
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  HomeViewModel vm = HomeViewModel();
   late Future<List<ColorModel>?> currentScheme;
   late List<bool> isOpened;
   ALGO algo = ALGO.monochrome;
@@ -30,15 +33,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     isOpened = List.generate(5, (index) => false);
     super.initState();
-    currentScheme = MultipleColorController.getRandomColorsWithAlgo(algo: algo);
+    currentScheme = vm.currentScheme;
   }
 
   @override
   Widget build(BuildContext context) {
+    algo = vm.algo;
     return Scaffold(
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add),
-        onPressed: fetch,
+        onPressed: () => setState(() {
+          currentScheme = vm.currentScheme;
+        }),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -54,54 +60,53 @@ class _HomePageState extends State<HomePage> {
                       selected: ALGO.monochrome == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.monochrome;
+                          vm.algo = ALGO.monochrome;
+                          currentScheme = vm.fetch();
                         });
-                        fetch();
                       }),
                   FilterChip(
                       label: const Text("analogic"),
                       selected: ALGO.analogic == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.analogic;
+                          vm.algo = ALGO.analogic;
+                          currentScheme = vm.fetch();
                         });
-                        fetch();
                       }),
                   FilterChip(
                       label: const Text("complement"),
                       selected: ALGO.complement == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.complement;
+                          vm.algo = ALGO.complement;
+                          currentScheme = vm.fetch();
                         });
-                        fetch();
                       }),
                   FilterChip(
                       label: const Text("analogic-complement"),
                       selected: ALGO.analogicComplement == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.analogicComplement;
+                          vm.algo = ALGO.analogicComplement;
+                          currentScheme = vm.fetch();
                         });
-                        fetch();
                       }),
                   FilterChip(
                       label: const Text("triad"),
                       selected: ALGO.triad == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.triad;
+                          vm.algo = ALGO.triad;
+                          currentScheme = vm.fetch();
                         });
-                        fetch();
                       }),
                   FilterChip(
                       label: const Text("quad"),
                       selected: ALGO.quad == algo ? true : false,
                       onSelected: (value) {
                         setState(() {
-                          algo = ALGO.quad;
+                          vm.algo = ALGO.quad;
                         });
-                        fetch();
                       }),
                 ],
               ),
@@ -233,14 +238,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  void fetch() async {
-    var target = MultipleColorController.getRandomColorsWithAlgo(algo: algo);
-    if (target != null)
-      setState(() {
-        currentScheme = target;
-        // currentScheme = target;
-      });
   }
 }
