@@ -1,29 +1,28 @@
 import 'dart:developer';
 
-import 'package:colorful/controllers/color_controller.dart';
-import 'package:colorful/models/color.dart';
 import 'package:flutter/material.dart';
 
+import 'package:colorful/core/entry/viewmodels/EntryViewModel.dart';
+import 'package:colorful/models/color.dart';
+import '../../../models/ColorScheme.dart' as cs;
+
 class DecideCard extends StatefulWidget {
-  const DecideCard({Key? key}) : super(key: key);
+  final int index;
+  final EntryViewModel vm;
+  const DecideCard({
+    Key? key,
+    required this.index,
+    required this.vm,
+  }) : super(key: key);
 
   @override
   State<DecideCard> createState() => _DecideCardState();
 }
 
 class _DecideCardState extends State<DecideCard> {
-  Future<List<ColorModel>?>? _scheme;
-
   @override
   void initState() {
     super.initState();
-    _scheme = MultipleColorController.getRandomColorsWithAlgo();
-  }
-
-  @override
-  void didUpdateWidget(covariant DecideCard oldWidget) {
-    return;
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -39,8 +38,8 @@ class _DecideCardState extends State<DecideCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("Do you find this color scheme attractive"),
-            FutureBuilder<List<ColorModel>?>(
-                future: _scheme,
+            FutureBuilder<List<cs.ColorScheme>>(
+                future: widget.vm.colors,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data != null)
                     return SingleChildScrollView(
@@ -50,7 +49,8 @@ class _DecideCardState extends State<DecideCard> {
                                 (index) => Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ColorTile(
-                                          color: snapshot.data![index]),
+                                          color: snapshot.data![widget.index]
+                                              .colors[index]),
                                     ))));
 
                   return CircularProgressIndicator();

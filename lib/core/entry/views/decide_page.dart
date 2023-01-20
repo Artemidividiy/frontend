@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:colorful/constants/EntryViewconstants.dart';
+import 'package:colorful/core/entry/viewmodels/EntryViewModel.dart';
 import 'package:colorful/core/entry/views/decide_card.dart';
 import 'package:colorful/core/home/views/HomePage.dart';
 import 'package:flutter/material.dart';
@@ -12,40 +14,51 @@ class DecidePage extends StatefulWidget {
 }
 
 class _DecidePageState extends State<DecidePage> {
-  late MatchEngine _matchEngine;
+  MatchEngine? _matchEngine;
+  late EntryViewModel vm;
   List<SwipeItem>? _items;
+
   @override
   void initState() {
+    vm = EntryViewModel();
     _items = List.generate(
-        3,
+        schemeCount,
         (index) => SwipeItem(
-            content: DecideCard(),
+            content: DecideCard(
+              index: index,
+              vm: vm,
+            ),
             likeAction: () => log("good👍"),
             nopeAction: () => log("nope🤮"),
             superlikeAction: null));
     _matchEngine = MatchEngine(swipeItems: _items);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          constraints: BoxConstraints.loose(Size(250, 450)),
-          child: SwipeCards(
-              matchEngine: _matchEngine,
-              onStackFinished: () {
-                log("finished");
-                Navigator.of(context).pushReplacement(PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      HomePage(),
-                ));
-              },
-              itemBuilder: (context, index) =>
-                  Container(child: _items![index].content)),
-        ),
-      ),
-    );
+        body: Center(
+      child: _matchEngine != null
+          ? Container(
+              constraints: BoxConstraints.loose(Size(250, 450)),
+              child: SwipeCards(
+                  matchEngine: _matchEngine ?? MatchEngine(),
+                  onStackFinished: () {
+                    log("finished");
+                    Navigator.of(context).pushReplacement(PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          HomePage(),
+                    ));
+                  },
+                  itemBuilder: (context, index) =>
+                      Container(child: _items![index].content)),
+            )
+          : Container(
+              alignment: Alignment.center,
+              child: Text("Error"),
+            ),
+    ));
   }
 }

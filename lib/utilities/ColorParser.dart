@@ -1,8 +1,7 @@
 import 'dart:collection';
-
 import 'dart:math';
-
 import 'package:colorful/models/color.dart';
+import 'package:flutter/material.dart';
 
 class ColorParser {
   static Group rgbToHsv({required Group rgb}) {
@@ -35,6 +34,15 @@ class ColorParser {
   static Group CmykToHsv({required Group cmyk}) {
     throw UnimplementedError();
   }
+}
+
+normalizeColor(Color color) {
+  return "rgb=" +
+      color.red.toString() +
+      "," +
+      color.green.toString() +
+      "," +
+      color.blue.toString();
 }
 
 extension ListMax on List {
