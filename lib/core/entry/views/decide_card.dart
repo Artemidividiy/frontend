@@ -52,8 +52,7 @@ class _DecideCardState extends State<DecideCard> {
                                           color: snapshot.data![widget.index]
                                               .colors[index]),
                                     ))));
-
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

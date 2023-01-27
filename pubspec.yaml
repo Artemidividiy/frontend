@@ -39,6 +39,7 @@ dependencies:
   swipe_cards: ^1.0.0
   flutter_hooks: ^0.18.5+1
   pocketbase: ^0.5.0+1
+  # flutter_secure_storage: ^7.0.1
 
 dev_dependencies:
   flutter_test:
