@@ -6,13 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../../enums/algo.dart';
 
-List<Color> colorsToRandom = [
-  Colors.indigo,
-  Colors.black,
-  Colors.amber,
-  Colors.cyan
-];
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -43,6 +36,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add),
         onPressed: () => setState(() {
+          vm.currentScheme = vm.fetch();
           currentScheme = vm.currentScheme;
         }),
       ),

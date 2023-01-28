@@ -1,0 +1,280 @@
+@startuml
+set namespaceSeparator ::
+
+class "colorful::core::settings::views::settings_page.dart::SettingsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::settings::views::settings_page.dart::SettingsPage"
+
+class "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" {
+  -ColorService _colorService
+  +ALGO algo
+  +Future<List<ColorModel>?> currentScheme
+  +Future<List<ColorModel>?> fetch()
+}
+
+"colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::services::ColorService.dart::ColorService"
+"colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::enums::algo.dart::ALGO"
+
+class "colorful::core::home::views::HomePage.dart::HomePage" {
+  +State<HomePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::home::views::HomePage.dart::HomePage"
+
+class "colorful::core::home::views::HomePage.dart::_HomePageState" {
+  +HomeViewModel vm
+  +Future<List<ColorModel>?> currentScheme
+  +List<bool> isOpened
+  +ALGO algo
+  -dynamic _normalizeColor()
+  +void initState()
+  +Widget build()
+}
+
+"colorful::core::home::views::HomePage.dart::_HomePageState" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
+"colorful::core::home::views::HomePage.dart::_HomePageState" o-- "colorful::enums::algo.dart::ALGO"
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::home::views::HomePage.dart::_HomePageState"
+
+class "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" {
+}
+
+class "colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel" {
+  +int schemeCount
+  -ColorService _service
+  +Future<List<ColorScheme>>? colors
+  +Future<dynamic> init()
+}
+
+"colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel" o-- "colorful::services::ColorService.dart::ColorService"
+
+class "colorful::core::entry::views::decide_card.dart::DecideCard" {
+  +int index
+  +EntryViewModel vm
+  +State<DecideCard> createState()
+}
+
+"colorful::core::entry::views::decide_card.dart::DecideCard" o-- "colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::entry::views::decide_card.dart::DecideCard"
+
+class "colorful::core::entry::views::decide_card.dart::_DecideCardState" {
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::entry::views::decide_card.dart::_DecideCardState"
+
+class "colorful::core::entry::views::decide_card.dart::ColorTile" {
+  +ColorModel? color
+  +Widget build()
+}
+
+"colorful::core::entry::views::decide_card.dart::ColorTile" o-- "colorful::models::color.dart::ColorModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::entry::views::decide_card.dart::ColorTile"
+
+class "colorful::core::entry::views::decide_page.dart::DecidePage" {
+  +State<DecidePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::entry::views::decide_page.dart::DecidePage"
+
+class "colorful::core::entry::views::decide_page.dart::_DecidePageState" {
+  -MatchEngine? _matchEngine
+  +EntryViewModel vm
+  -List<SwipeItem>? _items
+  +void initState()
+  +Widget build()
+}
+
+"colorful::core::entry::views::decide_page.dart::_DecidePageState" o-- "swipe_cards::swipe_cards.dart::MatchEngine"
+"colorful::core::entry::views::decide_page.dart::_DecidePageState" o-- "colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel"
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::entry::views::decide_page.dart::_DecidePageState"
+
+class "colorful::core::components::expandable_tile.dart::ExpandableTile" {
+  +Widget? header
+  +Widget? body
+  +State<ExpandableTile> createState()
+}
+
+"colorful::core::components::expandable_tile.dart::ExpandableTile" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::components::expandable_tile.dart::ExpandableTile"
+
+class "colorful::core::components::expandable_tile.dart::_ExpandableTileState" {
+  +bool isExpanded
+  +void initState()
+  +Widget build()
+  -void _showBody()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::components::expandable_tile.dart::_ExpandableTileState"
+
+class "colorful::core::components::expandable_tile.dart::_ExpandableHeader" {
+  +Widget content
+  +Widget build()
+}
+
+"colorful::core::components::expandable_tile.dart::_ExpandableHeader" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::components::expandable_tile.dart::_ExpandableHeader"
+
+class "colorful::core::components::expandable_tile.dart::_ExpandableBody" {
+  +Widget content
+  +Widget build()
+}
+
+"colorful::core::components::expandable_tile.dart::_ExpandableBody" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::components::expandable_tile.dart::_ExpandableBody"
+
+class "colorful::core::components::list_color_tile.dart::ColorTileList" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::components::list_color_tile.dart::ColorTileList"
+
+class "colorful::enums::algo.dart::ALGO" {
+  +int index
+  {static} +List<ALGO> values
+  {static} +ALGO analogic
+  {static} +ALGO triad
+  {static} +ALGO monochrome
+  {static} +ALGO monochromeLight
+  {static} +ALGO monochromeDark
+  {static} +ALGO complement
+  {static} +ALGO analogicComplement
+  {static} +ALGO quad
+}
+
+"colorful::enums::algo.dart::ALGO" o-- "colorful::enums::algo.dart::ALGO"
+"dart::core::Enum" <|-- "colorful::enums::algo.dart::ALGO"
+
+class "colorful::enums::status.dart::Status" {
+  +int index
+  {static} +List<Status> values
+  {static} +Status completed
+  {static} +Status error
+  {static} +Status pushing
+  {static} +Status loading
+  {static} +Status waiting
+}
+
+"colorful::enums::status.dart::Status" o-- "colorful::enums::status.dart::Status"
+"dart::core::Enum" <|-- "colorful::enums::status.dart::Status"
+
+class "colorful::models::User.dart::User" {
+  +String username
+  +String uuid
+  +int hashCode
+  +User copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "colorful::models::LocalUser.dart::LocalUser" {
+  {static} +LocalUser? instance
+  +String password
+  +String toString()
+}
+
+"colorful::models::LocalUser.dart::LocalUser" o-- "colorful::models::LocalUser.dart::LocalUser"
+"colorful::models::User.dart::User" <|-- "colorful::models::LocalUser.dart::LocalUser"
+
+class "colorful::models::ColorScheme.dart::ColorScheme" {
+  +List<ColorModel> colors
+  +int colorCount
+  +ALGO schemeAlgo
+  +int hashCode
+  +ColorScheme copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+"colorful::models::ColorScheme.dart::ColorScheme" o-- "colorful::enums::algo.dart::ALGO"
+
+class "colorful::models::color.dart::Group" {
+  +List<int> items
+  +int hashCode
+  +Group copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+  +int []()
+}
+
+class "colorful::models::color.dart::ColorModel" {
+  +Color color
+  +Group? rgb
+  +Group? hsv
+  +Group? cmyk
+  +String name
+  +int hashCode
+  +ColorModel copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+  +Future<ColorModel> getColor()
+}
+
+"colorful::models::color.dart::ColorModel" o-- "dart::ui::Color"
+"colorful::models::color.dart::ColorModel" o-- "colorful::models::color.dart::Group"
+
+class "colorful::main.dart::Colorful" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::main.dart::Colorful"
+
+abstract class "colorful::utilities::color_generator_local.dart::ColorGenerator" {
+  +Color generate()
+}
+
+class "colorful::utilities::color_generator_local.dart::BasicGenerator" {
+  -int? _alpha
+  +int? alpha
+  +Color generate()
+}
+
+"colorful::utilities::color_generator_local.dart::ColorGenerator" <|-- "colorful::utilities::color_generator_local.dart::BasicGenerator"
+
+class "colorful::utilities::color_generator_local.dart::ToneGenerator" {
+  +Color generate()
+}
+
+"colorful::utilities::color_generator_local.dart::ColorGenerator" <|-- "colorful::utilities::color_generator_local.dart::ToneGenerator"
+
+class "colorful::utilities::ColorParser.dart::ColorParser" {
+  {static} +Group rgbToHsv()
+  {static} +Group rgbToCmyk()
+  {static} +Group HsvToRgb()
+  {static} +Group HsvToCmyk()
+  {static} +Group CmykToRgb()
+  {static} +Group CmykToHsv()
+}
+
+class "colorful::services::ColorService.dart::ColorService" {
+  +Future<ColorModel?> getColorByColor()
+  +Future<ColorModel?> getColorByHex()
+  +Future<List<ColorModel>?> getRandomColorsWithAlgo()
+  +Future<List<ColorScheme>> getMultipleColorSchemes()
+  -dynamic _parse()
+}
+
+abstract class "colorful::services::ColorService.dart::parser" {
+  {static} +dynamic parse()
+}
+
+class "colorful::services::LocalMemoryService.dart::LocalMemoryService" {
+  -dynamic _secureStorageInstance
+  +LocalUser? currentUser
+  -dynamic _getUserFromMemory()
+}
+
+"colorful::services::LocalMemoryService.dart::LocalMemoryService" o-- "colorful::models::LocalUser.dart::LocalUser"
+
+
+@enduml
