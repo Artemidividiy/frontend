@@ -22,9 +22,9 @@ class NetworkService {
   Future saveUserToNetwork() async {
     var tmp = await authRes.signUp(
         email: LocalUser.instance!.email,
-        password: LocalUser.instance!.password);
+        password: LocalUser.instance!.password!);
     session = tmp.session;
-    NetworkUser user = tmp.user;
+    // NetworkUser user = tmp.user;
   }
 
   Future getColorSchemasListFromNet() async {

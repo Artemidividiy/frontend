@@ -46,15 +46,18 @@ class ColorService {
   }
 
   Future<List<ColorModel>?> getRandomColorsWithAlgo(
-      {ALGO? algo = ALGO.analogic}) async {
+      {ALGO? algo = ALGO.analogic,
+      int colorsCount = 5,
+      ColorModel? baseColor}) async {
     log("trying to get scheme");
     try {
       List<ColorModel> target = [];
-      Color color = BasicGenerator(null).generate();
+      var color = baseColor?.color;
+      color ??= BasicGenerator(null).generate();
       var response = await http.get(Uri.parse(BASE_PATH +
           "scheme?" +
           normalizeColor(color) +
-          "format=json&mode=${algoToString(algo!)}&count=5"));
+          "format=json&mode=${algoToString(algo!)}&count=$colorsCount"));
       var data = json.decode(response.body);
       for (var element in data['colors']) {
         target.add(

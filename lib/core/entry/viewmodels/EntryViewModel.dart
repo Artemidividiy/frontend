@@ -20,34 +20,34 @@ class EntryViewModel {
     colors = _service.getMultipleColorSchemes();
   }
 
-  Future<void> swipeLeft(ColorScheme scheme, ALGO algo) async {
+  Future<void> swipeLeft() async {
     return;
     //todo: я даже допиливать это не хочу, такая хуйня конечно
-    var instance = Supabase.instance.client;
-    for (var color in scheme.colors) {
-      await instance.from("colors").insert({
-        'color_name': color.name,
-        "created_by": LocalUser.instance!.uuid,
-        "hex": Hex.fromGroup(group: color.rgb!)
-      });
-    }
-    await instance.from("algorithms").insert({"name": algo.name});
-    await instance
-        .from("colorschemes")
-        .insert({"created_by": LocalUser.instance!.uuid});
-    await instance.from("colors_in_schemas").insert("");
+    // var instance = Supabase.instance.client;
+    // for (var color in scheme.colors) {
+    //   await instance.from("colors").insert({
+    //     'color_name': color.name,
+    //     "created_by": LocalUser.instance!.uuid,
+    //     "hex": Hex.fromGroup(group: color.rgb!)
+    //   });
+    // }
+    // await instance.from("algorithms").insert({"name": algo.name});
+    // await instance
+    //     .from("colorschemes")
+    //     .insert({"created_by": LocalUser.instance!.uuid});
+    // await instance.from("colors_in_schemas").insert("");
   }
 
-  Future<void> swipeRight(ColorScheme scheme, ALGO algo) async {
+  Future<void> swipeRight() async {
     return;
     //todo: ну и пиздос
-    var instance = Supabase.instance.client;
-    for (var color in scheme.colors) {
-      await instance.from("colors").insert({
-        'color_name': color.name,
-        "created_by": LocalUser.instance!.email,
-        "hex": Hex.fromGroup(group: color.rgb!)
-      });
-    }
+    // var instance = Supabase.instance.client;
+    // for (var color in scheme.colors) {
+    //   await instance.from("colors").insert({
+    //     'color_name': color.name,
+    //     "created_by": LocalUser.instance!.email,
+    //     "hex": Hex.fromGroup(group: color.rgb!)
+    //   });
+    // }
   }
 }
