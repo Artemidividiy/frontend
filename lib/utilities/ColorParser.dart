@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
+import 'package:colorful/models/Hex.dart';
 import 'package:colorful/models/color.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,8 @@ class ColorParser {
   static Group CmykToHsv({required Group cmyk}) {
     throw UnimplementedError();
   }
+
+  static Hex RgbToHex({required Group rgb}) => Hex.fromGroup(group: rgb);
 }
 
 normalizeColor(Color color) {

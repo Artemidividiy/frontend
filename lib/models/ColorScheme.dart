@@ -52,7 +52,7 @@ class ColorScheme {
 
   factory ColorScheme.fromListColors(List<ColorModel> colors, ALGO algo) =>
       ColorScheme(colorCount: colors.length, colors: colors, schemeAlgo: algo);
-
+  
   @override
   String toString() =>
       'ColorScheme(colors: $colors, colorCount: $colorCount, schemeAlgo: $schemeAlgo)';

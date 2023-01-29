@@ -3,6 +3,7 @@ import 'package:colorful/constants/EntryViewconstants.dart';
 import 'package:colorful/core/entry/viewmodels/EntryViewModel.dart';
 import 'package:colorful/core/entry/views/decide_card.dart';
 import 'package:colorful/core/home/views/HomePage.dart';
+import 'package:colorful/models/LocalUser.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
@@ -28,8 +29,8 @@ class _DecidePageState extends State<DecidePage> {
               index: index,
               vm: vm,
             ),
-            likeAction: () => log("good👍"),
-            nopeAction: () => log("nope🤮"),
+            likeAction: () => vm.swipeLeft(),
+            nopeAction: () => vm.swipeRight(),
             superlikeAction: null));
     _matchEngine = MatchEngine(swipeItems: _items);
 
@@ -38,6 +39,10 @@ class _DecidePageState extends State<DecidePage> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("logged in as ${LocalUser.instance!.email}")));
+    });
     return Scaffold(
         body: Center(
       child: _matchEngine != null

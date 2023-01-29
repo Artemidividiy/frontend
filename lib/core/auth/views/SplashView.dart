@@ -19,7 +19,10 @@ class SplashView extends StatelessWidget {
                 snapshot.data != null) return DecidePage();
 
             if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.data == null) return SupaAuthView();
+                snapshot.data == null)
+              return SupaAuthView(
+                vm: vm,
+              );
             return CircularProgressIndicator();
           },
         ),
