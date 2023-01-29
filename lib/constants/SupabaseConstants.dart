@@ -1,0 +1,3 @@
+const supabaseURL = "https://wvjnmysgekfrwngdpgic.supabase.co";
+const anonKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2am5teXNnZWtmcnduZ2RwZ2ljIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY3NTAwMzYyOSwiZXhwIjoxOTkwNTc5NjI5fQ.yBr1kETwYiAf0b17HSI_Lm02goCw07WTJ1Pa8WcuMQI";

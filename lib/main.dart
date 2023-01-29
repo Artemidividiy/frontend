@@ -1,8 +1,11 @@
+import 'package:colorful/constants/SupabaseConstants.dart';
 import 'package:colorful/core/auth/views/SplashView.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(url: supabaseURL, anonKey: anonKey);
   runApp(const Colorful());
 }
 
