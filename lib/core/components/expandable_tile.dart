@@ -160,7 +160,6 @@ extension Designed on ExpandableTile {
                   }
                 }),
               ),
-              const TextButton(onPressed: null, child: const Text("collapse"))
             ],
           ),
         ),
@@ -168,15 +167,40 @@ extension Designed on ExpandableTile {
             constraints: BoxConstraints.tight(Size(Size.infinite.width, 120)),
             decoration: BoxDecoration(color: snapshot.data![index].color),
             alignment: Alignment.center,
-            child: Text(
-                '${snapshot.data![index].name} (rgb : ${normalizeColor(snapshot.data![index].color)})',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: ThemeData.estimateBrightnessForColor(
-                              snapshot.data![index].color) ==
-                          Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                ))));
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: ThemeData.estimateBrightnessForColor(
+                            snapshot.data![index].color) ==
+                        Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(snapshot.data![index].name.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: ThemeData.estimateBrightnessForColor(
+                                    snapshot.data![index].color) ==
+                                Brightness.light
+                            ? Colors.white
+                            : Colors.black,
+                      )),
+                  Text(
+                    snapshot.data![index].toHexString().toUpperCase(),
+                    style: TextStyle(
+                      color: ThemeData.estimateBrightnessForColor(
+                                  snapshot.data![index].color) ==
+                              Brightness.light
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  )
+                ],
+              ),
+            )));
   }
 }

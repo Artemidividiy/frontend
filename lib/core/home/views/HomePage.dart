@@ -1,9 +1,7 @@
 import 'package:colorful/core/components/expandable_tile.dart';
 import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
-import 'package:colorful/core/home/views/GeneratorSettingsView.dart';
 import 'package:colorful/models/color.dart';
-import 'package:colorful/utilities/color_generator_local.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -35,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     algo = vm.algo;
     return Scaffold(
       floatingActionButton: IconButton(
-        icon: const Icon(Icons.add),
+        icon: const Icon(Icons.settings),
         onPressed: () => showModalBottomSheet(
           context: context,
           builder: (context) {

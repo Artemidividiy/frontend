@@ -167,4 +167,8 @@ class ColorModel {
   //     return Status.error;
   //   }
   // }
+
+  String toHexString() {
+    return "#${this.rgb!.items[0].toRadixString(16)}${this.rgb!.items[1].toRadixString(16)}${this.rgb!.items[2].toRadixString(16)}";
+  }
 }
