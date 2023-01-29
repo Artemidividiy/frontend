@@ -1,8 +1,5 @@
-import 'package:colorful/core/entry/views/decide_card.dart';
+import 'package:colorful/core/auth/views/SplashView.dart';
 import 'package:flutter/material.dart';
-  
-import 'core/entry/views/decide_page.dart';
-import 'core/home/views/HomePage.dart';
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +12,7 @@ class Colorful extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DecidePage(),
-    );
+        theme: ThemeData(useMaterial3: true, primaryColor: Colors.black),
+        home: SplashView());
   }
 }
