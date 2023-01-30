@@ -1,7 +1,8 @@
 import 'package:colorful/core/components/expandable_tile.dart';
 import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
+import 'package:colorful/core/home/views/ExportSchemeView.dart';
 import 'package:colorful/models/color.dart';
-
+import '../../../models/ColorScheme.dart' as cs;
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -16,11 +17,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeViewModel vm = HomeViewModel();
-  late Future<List<ColorModel>?> currentScheme;
+  late Future<List<cs.ColorScheme>?> currentScheme;
   late List<bool> isOpened;
   ALGO algo = ALGO.monochrome;
-  late ValueNotifier<Future<List<ColorModel>?>> notifier =
-      ValueNotifier<Future<List<ColorModel>?>>(vm.fetch());
+  late ValueNotifier<Future<List<cs.ColorScheme>?>> notifier =
+      ValueNotifier<Future<List<cs.ColorScheme>?>>(vm.fetch());
   @override
   void initState() {
     isOpened = List.generate(5, (index) => false);
@@ -148,10 +149,10 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: [
-            ValueListenableBuilder<Future<List<ColorModel>?>>(
+            ValueListenableBuilder<Future<List<cs.ColorScheme>?>>(
                 valueListenable: notifier,
                 builder: (context, value, child) =>
-                    FutureBuilder<List<ColorModel>?>(
+                    FutureBuilder<List<cs.ColorScheme>?>(
                         future: currentScheme,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
@@ -169,7 +170,13 @@ class _HomePageState extends State<HomePage> {
                           }
                           return const Center(
                               child: const CircularProgressIndicator());
-                        }))
+                        })),
+            TextButton(
+                onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => ExportSchemeView(vm: vm),
+                    ),
+                child: Text("Export"))
           ]),
         ),
       ),

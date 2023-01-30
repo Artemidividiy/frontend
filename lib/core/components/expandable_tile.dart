@@ -1,6 +1,6 @@
 import 'package:colorful/utilities/ExportUtils.dart';
 import 'package:flutter/material.dart';
-
+import '../../models/ColorScheme.dart' as cs;
 import '../../models/color.dart';
 import '../../utilities/color_generator_local.dart';
 
@@ -81,10 +81,10 @@ class _ExpandableBody extends StatelessWidget {
 extension Designed on ExpandableTile {
   widget(
       {required BuildContext context,
-      required AsyncSnapshot<List<ColorModel>?> snapshot,
+      required AsyncSnapshot<List<cs.ColorScheme>?> snapshot,
       required int index}) {
-    Group cmyk = snapshot.data![index].cmyk!;
-    Group hsv = snapshot.data![index].hsv!;
+    Group cmyk = snapshot.data!.first.colors[index].cmyk!;
+    Group hsv = snapshot.data!.first.colors[index].hsv!;
     return ExpandableTile(
         body: Container(
           margin: const EdgeInsets.all(8),
@@ -142,7 +142,7 @@ extension Designed on ExpandableTile {
                 children: List.generate(8, (tindex) {
                   if (tindex > 3) {
                     Color temp = ToneGenerator().generate(
-                        baseColor: snapshot.data![index].color,
+                        baseColor: snapshot.data!.first.colors[index].color,
                         distance: tindex * 0.1);
                     return GestureDetector(
                       onTap: () => copyToClipboard(
@@ -165,7 +165,7 @@ extension Designed on ExpandableTile {
                     );
                   } else {
                     Color temp = ToneGenerator().generate(
-                        baseColor: snapshot.data![index].color,
+                        baseColor: snapshot.data!.first.colors[index].color,
                         distance: tindex * 0.3,
                         toBlack: true);
                     ColorModel tcolor = ColorModel(
@@ -197,7 +197,7 @@ extension Designed on ExpandableTile {
               ),
               const Text("Luminance:"),
               Text(
-                snapshot.data![index].color
+                snapshot.data!.first.colors[index].color
                     .computeLuminance()
                     .toStringAsFixed(6),
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -207,14 +207,15 @@ extension Designed on ExpandableTile {
         ),
         header: Container(
             constraints: BoxConstraints.tight(Size(Size.infinite.width, 120)),
-            decoration: BoxDecoration(color: snapshot.data![index].color),
+            decoration:
+                BoxDecoration(color: snapshot.data!.first.colors[index].color),
             alignment: Alignment.center,
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: ThemeData.estimateBrightnessForColor(
-                            snapshot.data![index].color) ==
+                            snapshot.data!.first.colors[index].color) ==
                         Brightness.light
                     ? Colors.black54
                     : Colors.white54,
@@ -222,20 +223,22 @@ extension Designed on ExpandableTile {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(snapshot.data![index].name.toUpperCase(),
+                  Text(snapshot.data!.first.colors[index].name.toUpperCase(),
                       style: TextStyle(
                         fontSize: 18,
                         color: ThemeData.estimateBrightnessForColor(
-                                    snapshot.data![index].color) ==
+                                    snapshot.data!.first.colors[index].color) ==
                                 Brightness.light
                             ? Colors.white
                             : Colors.black,
                       )),
                   Text(
-                    snapshot.data![index].toHexString().toUpperCase(),
+                    snapshot.data!.first.colors[index]
+                        .toHexString()
+                        .toUpperCase(),
                     style: TextStyle(
                       color: ThemeData.estimateBrightnessForColor(
-                                  snapshot.data![index].color) ==
+                                  snapshot.data!.first.colors[index].color) ==
                               Brightness.light
                           ? Colors.white
                           : Colors.black,
