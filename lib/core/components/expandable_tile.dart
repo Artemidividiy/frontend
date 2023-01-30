@@ -39,7 +39,7 @@ class _ExpandableTileState extends State<ExpandableTile> {
           ),
           AnimatedContainer(
               curve: Curves.easeInOutQuart,
-              height: isExpanded ? 300 : 0,
+              height: isExpanded ? 400 : 0,
               duration: Duration(milliseconds: 250),
               child: isExpanded
                   ? _ExpandableBody(
@@ -82,6 +82,8 @@ extension Designed on ExpandableTile {
   widget(
       {required AsyncSnapshot<List<ColorModel>?> snapshot,
       required int index}) {
+    Group cmyk = snapshot.data![index].cmyk!;
+    Group hsv = snapshot.data![index].hsv!;
     return ExpandableTile(
         body: Container(
           margin: EdgeInsets.all(8),
@@ -95,15 +97,49 @@ extension Designed on ExpandableTile {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('cmyk: ${snapshot.data![index].cmyk}'),
-              Text('hsv: ${snapshot.data![index].hsv}'),
+              Text(
+                'CMYK:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Table(
+                children: [
+                  TableRow(
+                      children: [Text("C"), Text("M"), Text("Y"), Text("K")]),
+                  TableRow(children: [
+                    Text(cmyk[0].toStringAsPrecision(4)),
+                    Text(cmyk[1].toStringAsPrecision(4)),
+                    Text(cmyk[2].toStringAsPrecision(4)),
+                    Text(cmyk[3].toStringAsPrecision(4))
+                  ])
+                ],
+              ),
+              // Text(
+              //     '${ColorParser.rgbToCmyk(rgb: snapshot.data![index].rgb!).toString()}'),
+              Text(
+                'HSV:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Table(
+                children: [
+                  TableRow(children: [
+                    Text("H"),
+                    Text("S"),
+                    Text("V"),
+                  ]),
+                  TableRow(children: [
+                    Text(hsv[0].toStringAsPrecision(4)),
+                    Text(hsv[1].toStringAsPrecision(4)),
+                    Text(hsv[2].toStringAsPrecision(4)),
+                  ])
+                ],
+              ),
               const Text('Tones:'),
               GridView.count(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                crossAxisCount: 5,
-                children: List.generate(10, (tindex) {
-                  if (tindex > 4) {
+                crossAxisCount: 4,
+                children: List.generate(8, (tindex) {
+                  if (tindex > 3) {
                     Color temp = ToneGenerator().generate(
                         baseColor: snapshot.data![index].color,
                         distance: tindex * 0.1);
@@ -117,17 +153,6 @@ extension Designed on ExpandableTile {
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.all(4),
                       // constraints: BoxConstraints.tight(Size(100, 100)),
-                      child: Text(
-                        snapshot.data![index].color
-                            .computeLuminance()
-                            .toStringAsFixed(3),
-                        style: TextStyle(
-                          color: ThemeData.estimateBrightnessForColor(temp) ==
-                                  Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
                     );
                   } else {
                     Color temp = ToneGenerator().generate(
@@ -145,21 +170,17 @@ extension Designed on ExpandableTile {
                       margin: EdgeInsets.all(8),
 
                       // constraints: BoxConstraints.tight(Size(100, 100)),
-                      child: Text(
-                        snapshot.data![index].color
-                            .computeLuminance()
-                            .toStringAsFixed(3),
-                        style: TextStyle(
-                          color: ThemeData.estimateBrightnessForColor(temp) ==
-                                  Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
                     );
                   }
                 }),
               ),
+              Text("Luminance:"),
+              Text(
+                snapshot.data![index].color
+                    .computeLuminance()
+                    .toStringAsFixed(6),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
             ],
           ),
         ),
@@ -174,8 +195,8 @@ extension Designed on ExpandableTile {
                 color: ThemeData.estimateBrightnessForColor(
                             snapshot.data![index].color) ==
                         Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+                    ? Colors.black54
+                    : Colors.white54,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

@@ -1,19 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:colorful/utilities/ColorParser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:colorful/enums/status.dart';
 
 class Group {
-  List<int> items;
+  List<double> items;
   Group(
     this.items,
   );
 
   Group copyWith({
-    List<int>? items,
+    List<double>? items,
   }) {
     return Group(
       items ?? this.items,
@@ -28,7 +29,7 @@ class Group {
 
   factory Group.fromMap(Map<String, dynamic> map) {
     return Group(
-      List<int>.from(map['items']),
+      List<double>.from(map['items']),
     );
   }
 
@@ -37,7 +38,8 @@ class Group {
   factory Group.fromJson(String source) => Group.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Group(items: $items)';
+  String toString() =>
+      '${items.map((element) => element.toStringAsPrecision(4)).join()}';
 
   @override
   bool operator ==(Object other) {
@@ -49,7 +51,7 @@ class Group {
   @override
   int get hashCode => items.hashCode;
 
-  int operator [](int index) => items[index];
+  double operator [](int index) => items[index];
 }
 
 class ColorModel {
@@ -62,7 +64,18 @@ class ColorModel {
     this.rgb,
     this.hsv,
     required this.name,
-  }) : assert(cmyk != null || rgb != null || hsv != null);
+  }) : assert(cmyk != null || rgb != null || hsv != null) {
+    if (rgb != null) {
+      cmyk = ColorParser.rgbToCmyk(rgb: rgb!);
+      hsv = ColorParser.rgbToHsv(rgb: rgb!);
+    } else if (hsv != null) {
+      cmyk = ColorParser.HsvToCmyk(hsv: hsv!);
+      rgb = ColorParser.HsvToRgb(hsv: hsv!);
+    } else {
+      cmyk = ColorParser.CmykToHsv(cmyk: cmyk!);
+      rgb = ColorParser.CmykToRgb(cmyk: cmyk!);
+    }
+  }
 
   ColorModel copyWith({
     required Color color,
@@ -118,7 +131,8 @@ class ColorModel {
   }
 
   factory ColorModel.fromRGB({required Group rgb}) => ColorModel(
-      color: Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1), name: "Unknown");
+      color: Color.fromRGBO(rgb[0].toInt(), rgb[1].toInt(), rgb[2].toInt(), 1),
+      name: "Unknown");
 
   @override
   int get hashCode =>
@@ -143,8 +157,8 @@ class ColorModel {
     //   // }
     // } catch (e) {
     return ColorModel(
-        color: Color.fromRGBO(
-            rgbCollection[0], rgbCollection[1], rgbCollection[2], 1),
+        color: Color.fromRGBO(rgbCollection[0].toInt(),
+            rgbCollection[1].toInt(), rgbCollection[2].toInt(), 1),
         name: "Unknown");
     // }
   }
@@ -169,6 +183,6 @@ class ColorModel {
   // }
 
   String toHexString() {
-    return "#${this.rgb!.items[0].toRadixString(16)}${this.rgb!.items[1].toRadixString(16)}${this.rgb!.items[2].toRadixString(16)}";
+    return "#${this.rgb!.items[0].toInt().toRadixString(16)}${this.rgb!.items[1].toInt().toRadixString(16)}${this.rgb!.items[2].toInt().toRadixString(16)}";
   }
 }

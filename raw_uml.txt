@@ -9,12 +9,15 @@ class "colorful::core::settings::views::settings_page.dart::SettingsPage" {
 
 class "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" {
   -ColorService _colorService
+  +int colorsCount
+  +ColorModel? baseColor
   +ALGO algo
   +Future<List<ColorModel>?> currentScheme
   +Future<List<ColorModel>?> fetch()
 }
 
 "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::services::ColorService.dart::ColorService"
+"colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::models::color.dart::ColorModel"
 "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::enums::algo.dart::ALGO"
 
 class "colorful::core::home::views::HomePage.dart::HomePage" {
@@ -28,23 +31,131 @@ class "colorful::core::home::views::HomePage.dart::_HomePageState" {
   +Future<List<ColorModel>?> currentScheme
   +List<bool> isOpened
   +ALGO algo
-  -dynamic _normalizeColor()
+  +ValueNotifier<Future<List<ColorModel>?>> notifier
   +void initState()
   +Widget build()
 }
 
 "colorful::core::home::views::HomePage.dart::_HomePageState" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
 "colorful::core::home::views::HomePage.dart::_HomePageState" o-- "colorful::enums::algo.dart::ALGO"
+"colorful::core::home::views::HomePage.dart::_HomePageState" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<Future<List<ColorModel>>>"
 "flutter::src::widgets::framework.dart::State" <|-- "colorful::core::home::views::HomePage.dart::_HomePageState"
 
-class "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" {
+class "colorful::core::home::views::GeneratorSettingsView.dart::MBSWidget" {
+  +HomeViewModel vm
+  +Widget showMBS()
 }
+
+"colorful::core::home::views::GeneratorSettingsView.dart::MBSWidget" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
+
+class "colorful::core::home::views::GeneratorSettingsView.dart::AlgoPicker" {
+  +HomeViewModel vm
+  +State<AlgoPicker> createState()
+}
+
+"colorful::core::home::views::GeneratorSettingsView.dart::AlgoPicker" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::home::views::GeneratorSettingsView.dart::AlgoPicker"
+
+class "colorful::core::home::views::GeneratorSettingsView.dart::_AlgoPickerState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::home::views::GeneratorSettingsView.dart::_AlgoPickerState"
+
+class "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" {
+  -LocalMemoryService _LocalMemory
+  +Future<LocalUser?> user
+  +dynamic registerNewUser()
+  +dynamic authenticateUser()
+}
+
+"colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" o-- "colorful::services::LocalMemoryService.dart::LocalMemoryService"
+
+class "colorful::core::auth::views::AuthView.dart::AuthView" {
+  +State<AuthView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::auth::views::AuthView.dart::AuthView"
+
+class "colorful::core::auth::views::AuthView.dart::_AuthViewState" {
+  -bool _isLogInView
+  +dynamic switchScreen()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::auth::views::AuthView.dart::_AuthViewState"
+
+class "colorful::core::auth::views::AuthView.dart::_LoginView" {
+  +Function switchView
+  +State<_LoginView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::auth::views::AuthView.dart::_LoginView"
+
+class "colorful::core::auth::views::AuthView.dart::_LoginViewState" {
+  -TextEditingController _loginController
+  -TextEditingController _passwordController
+  +Widget build()
+}
+
+"colorful::core::auth::views::AuthView.dart::_LoginViewState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::auth::views::AuthView.dart::_LoginViewState"
+
+class "colorful::core::auth::views::AuthView.dart::_RegisterView" {
+  +Function switchView
+  +State<_RegisterView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::auth::views::AuthView.dart::_RegisterView"
+
+class "colorful::core::auth::views::AuthView.dart::_RegisterViewState" {
+  -TextEditingController _loginController
+  -TextEditingController _passwordController
+  -TextEditingController _emailController
+  -TextEditingController _passwordConfirmationController
+  +GlobalKey<FormState> formkey
+  +String? validate()
+  +String? passwordValidator()
+  +String? passwordConfirmationValidator()
+  +Widget build()
+  +dynamic register()
+}
+
+"colorful::core::auth::views::AuthView.dart::_RegisterViewState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"colorful::core::auth::views::AuthView.dart::_RegisterViewState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::auth::views::AuthView.dart::_RegisterViewState"
+
+class "colorful::core::auth::views::SupaAuthView.dart::SupaAuthView" {
+  +AuthViewModel vm
+  +State<SupaAuthView> createState()
+}
+
+"colorful::core::auth::views::SupaAuthView.dart::SupaAuthView" o-- "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::auth::views::SupaAuthView.dart::SupaAuthView"
+
+class "colorful::core::auth::views::SupaAuthView.dart::_SupaAuthViewState" {
+  +bool isLogIn
+  +Widget build()
+  +void push()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::auth::views::SupaAuthView.dart::_SupaAuthViewState"
+
+class "colorful::core::auth::views::SplashView.dart::SplashView" {
+  +AuthViewModel vm
+  +Widget build()
+}
+
+"colorful::core::auth::views::SplashView.dart::SplashView" o-- "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::auth::views::SplashView.dart::SplashView"
 
 class "colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel" {
   +int schemeCount
   -ColorService _service
   +Future<List<ColorScheme>>? colors
   +Future<dynamic> init()
+  +Future<void> swipeLeft()
+  +Future<void> swipeRight()
 }
 
 "colorful::core::entry::viewmodels::EntryViewModel.dart::EntryViewModel" o-- "colorful::services::ColorService.dart::ColorService"
@@ -131,6 +242,18 @@ class "colorful::core::components::list_color_tile.dart::ColorTileList" {
 
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::components::list_color_tile.dart::ColorTileList"
 
+class "colorful::enums::AuthStatus.dart::AuthStatus" {
+  +int index
+  {static} +List<AuthStatus> values
+  {static} +AuthStatus complete
+  {static} +AuthStatus error
+  {static} +AuthStatus nuf
+  {static} +AuthStatus undone
+}
+
+"colorful::enums::AuthStatus.dart::AuthStatus" o-- "colorful::enums::AuthStatus.dart::AuthStatus"
+"dart::core::Enum" <|-- "colorful::enums::AuthStatus.dart::AuthStatus"
+
 class "colorful::enums::algo.dart::ALGO" {
   +int index
   {static} +List<ALGO> values
@@ -160,8 +283,10 @@ class "colorful::enums::status.dart::Status" {
 "colorful::enums::status.dart::Status" o-- "colorful::enums::status.dart::Status"
 "dart::core::Enum" <|-- "colorful::enums::status.dart::Status"
 
+class "colorful::models::NetworkUser.dart::NetworkUser" {
+}
+
 class "colorful::models::User.dart::User" {
-  +String username
   +String uuid
   +int hashCode
   +User copyWith()
@@ -173,12 +298,24 @@ class "colorful::models::User.dart::User" {
 
 class "colorful::models::LocalUser.dart::LocalUser" {
   {static} +LocalUser? instance
-  +String password
+  +String? password
+  +String email
   +String toString()
+  {static} +LocalUser? fromString()
 }
 
 "colorful::models::LocalUser.dart::LocalUser" o-- "colorful::models::LocalUser.dart::LocalUser"
 "colorful::models::User.dart::User" <|-- "colorful::models::LocalUser.dart::LocalUser"
+
+class "colorful::models::Hex.dart::Hex" {
+  +String hexValue
+  +int hashCode
+  +Hex copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
 
 class "colorful::models::ColorScheme.dart::ColorScheme" {
   +List<ColorModel> colors
@@ -218,6 +355,7 @@ class "colorful::models::color.dart::ColorModel" {
   +String toString()
   +bool ==()
   +Future<ColorModel> getColor()
+  +String toHexString()
 }
 
 "colorful::models::color.dart::ColorModel" o-- "dart::ui::Color"
@@ -254,6 +392,7 @@ class "colorful::utilities::ColorParser.dart::ColorParser" {
   {static} +Group HsvToCmyk()
   {static} +Group CmykToRgb()
   {static} +Group CmykToHsv()
+  {static} +Hex RgbToHex()
 }
 
 class "colorful::services::ColorService.dart::ColorService" {
@@ -268,13 +407,28 @@ abstract class "colorful::services::ColorService.dart::parser" {
   {static} +dynamic parse()
 }
 
-class "colorful::services::LocalMemoryService.dart::LocalMemoryService" {
-  -dynamic _secureStorageInstance
-  +LocalUser? currentUser
-  -dynamic _getUserFromMemory()
+class "colorful::services::NetworkService.dart::NetworkService" {
+  +GoTrueClient authRes
+  +Session? session
+  +void init()
+  +Future<dynamic> getUserFromNetwork()
+  +Future<dynamic> saveUserToNetwork()
+  +Future<dynamic> getColorSchemasListFromNet()
+  +Future<dynamic> saveColorSchemeToNetwork()
 }
 
-"colorful::services::LocalMemoryService.dart::LocalMemoryService" o-- "colorful::models::LocalUser.dart::LocalUser"
+"colorful::services::NetworkService.dart::NetworkService" o-- "gotrue::src::gotrue_client.dart::GoTrueClient"
+"colorful::services::NetworkService.dart::NetworkService" o-- "gotrue::src::types::session.dart::Session"
+
+class "colorful::services::LocalMemoryService.dart::LocalMemoryService" {
+  -FlutterSecureStorage _secureStorageInstance
+  {static} +AuthStatus status
+  +Future<LocalUser?> getUserFromMemory()
+  +Future<void> saveUserToMemory()
+}
+
+"colorful::services::LocalMemoryService.dart::LocalMemoryService" o-- "flutter_secure_storage::flutter_secure_storage.dart::FlutterSecureStorage"
+"colorful::services::LocalMemoryService.dart::LocalMemoryService" o-- "colorful::enums::AuthStatus.dart::AuthStatus"
 
 
 @enduml

@@ -44,9 +44,9 @@ class Hex {
 
   factory Hex.fromGroup({required Group group}) {
     String target = "";
-    target += group.items[0].toRadixString(16);
-    target += group.items[1].toRadixString(16);
-    target += group.items[2].toRadixString(16);
+    target += group.items[0].toInt().toRadixString(16);
+    target += group.items[1].toInt().toRadixString(16);
+    target += group.items[2].toInt().toRadixString(16);
     return Hex(hexValue: target);
   }
 

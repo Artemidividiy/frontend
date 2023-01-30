@@ -14,7 +14,11 @@ import '../models/ColorScheme.dart' as cs;
 mixin parser {
   static parse(Map<String, dynamic> map) {
     return ColorModel(
-        rgb: Group([map['rgb']['r'], map['rgb']['g'], map['rgb']['b']]),
+        rgb: Group([
+          (map['rgb']['r'] as num).toDouble(),
+          (map['rgb']['g'] as num).toDouble(),
+          (map['rgb']['b'] as num).toDouble()
+        ]),
         color: Color(int.parse("0xFF" + map['hex']['clean'])),
         name: map['name']['value']);
   }
