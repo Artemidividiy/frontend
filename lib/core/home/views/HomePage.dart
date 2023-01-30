@@ -160,7 +160,10 @@ class _HomePageState extends State<HomePage> {
                                 return Designed(ExpandableTile(
                                   header: null,
                                   body: null,
-                                )).widget(snapshot: snapshot, index: index);
+                                )).widget(
+                                    context: context,
+                                    snapshot: snapshot,
+                                    index: index);
                               }),
                             );
                           }
