@@ -133,6 +133,9 @@ class ColorModel {
   factory ColorModel.fromRGB({required Group rgb}) => ColorModel(
       color: Color.fromRGBO(rgb[0].toInt(), rgb[1].toInt(), rgb[2].toInt(), 1),
       name: "Unknown");
+  factory ColorModel.fromQRCodeData(String string) {
+    return ColorModel.fromJson(string);
+  }
 
   @override
   int get hashCode =>

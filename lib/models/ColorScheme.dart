@@ -32,7 +32,7 @@ class ColorScheme {
     return {
       'colors': colors.map((x) => x.toMap()).toList(),
       'colorCount': colorCount,
-      'schemeAlgo': schemeAlgo,
+      'schemeAlgo': schemeAlgo.toString(),
     };
   }
 
@@ -52,10 +52,15 @@ class ColorScheme {
 
   factory ColorScheme.fromListColors(List<ColorModel> colors, ALGO algo) =>
       ColorScheme(colorCount: colors.length, colors: colors, schemeAlgo: algo);
-  
+
+  factory ColorScheme.fromQRCodeData(String string) {
+    return ColorScheme.fromJson(string);
+  }
+
   @override
-  String toString() =>
-      'ColorScheme(colors: $colors, colorCount: $colorCount, schemeAlgo: $schemeAlgo)';
+  String toString() => '${colors.map((element) {
+        return element.toString() + "---";
+      })}\n$colorCount\n$schemeAlgo';
 
   @override
   bool operator ==(Object other) {

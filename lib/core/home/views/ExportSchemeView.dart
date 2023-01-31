@@ -57,7 +57,10 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                                   onPressed: () async {
                                     cssTextNotifier = ValueNotifier<String>(
                                         "qr-" +
-                                            (await vm.currentScheme)
+                                            (await vm.currentScheme)!
+                                                .toList()
+                                                .first
+                                                .toJson()
                                                 .toString());
                                     setState(() {
                                       height = 450;
