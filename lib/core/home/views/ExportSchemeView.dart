@@ -13,6 +13,7 @@ class ExportSchemeView extends StatefulWidget {
 class _ExportSchemeViewState extends State<ExportSchemeView> {
   late HomeViewModel vm;
   late ValueNotifier<String?> cssTextNotifier;
+  List selectedValues = [false, false, false];
   double height = 100;
   @override
   void initState() {
@@ -41,20 +42,29 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              TextButton(
-                                  onPressed: () => vm.copyToClipboard(context),
-                                  child: Text("copy to clipboard")),
-                              TextButton(
-                                  onPressed: () async {
+                              ChoiceChip(
+                                  selected: selectedValues[0],
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedValues[0] = value;
+                                    });
+                                    vm.copyToClipboard(context);
+                                  },
+                                  label: Text("copy to clipboard")),
+                              ChoiceChip(
+                                  selected: selectedValues[1],
+                                  onSelected: (value) async {
                                     cssTextNotifier = ValueNotifier<String>(
                                         await vm.exportScheme());
                                     setState(() {
+                                      selectedValues[1] = value;
                                       height = 400;
                                     });
                                   },
-                                  child: Text("export to css")),
-                              TextButton(
-                                  onPressed: () async {
+                                  label: Text("export to css")),
+                              ChoiceChip(
+                                  selected: selectedValues[2],
+                                  onSelected: (value) async {
                                     cssTextNotifier = ValueNotifier<String>(
                                         "qr-" +
                                             (await vm.currentScheme)!
@@ -64,9 +74,10 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                                                 .toString());
                                     setState(() {
                                       height = 450;
+                                      selectedValues[2] = value;
                                     });
                                   },
-                                  child: Text("view qr-code"))
+                                  label: Text("view qr-code"))
                             ],
                           ))
                     ]);
@@ -84,7 +95,8 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                         children: [
                           Text(value),
                           IconButton(
-                              onPressed: () => vm.copyToClipboard(context),
+                              onPressed: () =>
+                                  vm.copyTextToClipboard(context, value),
                               icon: Icon(Icons.copy_all))
                         ],
                       ),

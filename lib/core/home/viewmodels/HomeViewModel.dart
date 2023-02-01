@@ -36,4 +36,9 @@ class HomeViewModel {
     _exportService.copyToClipboard(context, currentScheme.toString());
     Navigator.of(context).pop();
   }
+
+  void copyTextToClipboard(BuildContext context, String content) {
+    _exportService.copyToClipboard(context, content);
+    Navigator.of(context).pop();
+  }
 }

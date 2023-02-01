@@ -20,11 +20,11 @@ class ExportService {
   }
 
   String _generateClass(String className, String colorValue) {
-    return "/* $className[generated] (${DateTime.now().toIso8601String()}) */\n.$className {\n    $colorValue;\n}";
+    return "/* $className[generated] (${DateTime.now().toIso8601String()}) */\n.$className {\n    color: #${colorValue.substring(2)};\n}";
   }
 
   void copyToClipboard(mt.BuildContext context, String content) async {
-    await Clipboard.setData(ClipboardData(text: '#$content'));
+    await Clipboard.setData(ClipboardData(text: '$content'));
     log("copied to clipboard $content");
     mt.ScaffoldMessenger.of(context)
         .showSnackBar(mt.SnackBar(content: mt.Text("copied to clipboard")));
