@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:colorful/models/ColorScheme.dart';
 import 'package:flutter/material.dart' as mt;
+
 import 'package:flutter/services.dart';
 
 class ExportService {
@@ -28,5 +30,10 @@ class ExportService {
     log("copied to clipboard $content");
     mt.ScaffoldMessenger.of(context)
         .showSnackBar(mt.SnackBar(content: mt.Text("copied to clipboard")));
+  }
+
+  ColorScheme importSchemeFromQRCode(
+      mt.BuildContext context, String encodedValue) {
+    return ColorScheme.fromJson(json.decode(encodedValue));
   }
 }

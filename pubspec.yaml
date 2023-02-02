@@ -44,6 +44,7 @@ dependencies:
   supabase_auth_ui: ^0.0.1
   numberpicker: ^2.1.1
   qr_flutter: ^4.0.0
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:

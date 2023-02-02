@@ -2,6 +2,7 @@ import 'package:colorful/core/components/expandable_tile.dart';
 import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
 import 'package:colorful/core/home/views/ExportSchemeView.dart';
 import 'package:colorful/models/color.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../../models/ColorScheme.dart' as cs;
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -176,7 +177,23 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       builder: (context) => ExportSchemeView(vm: vm),
                     ),
-                child: Text("Export"))
+                child: Text("Export")),
+            TextButton(
+                onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => QRView(
+                        key: GlobalKey(),
+                        onQRViewCreated: (p0) {
+                          vm.qrViewController = p0;
+                          vm.qrViewController?.scannedDataStream.listen((data) {
+                            currentScheme = Future.value([
+                              vm.importFromQrCode(context, data.code ?? "")
+                            ]);
+                          });
+                        },
+                      ),
+                    ),
+                child: Text("Import")),
           ]),
         ),
       ),

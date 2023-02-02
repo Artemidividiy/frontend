@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:colorful/core/home/views/ExportSchemeView.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../../models/ColorScheme.dart' as cs;
 import 'package:colorful/enums/algo.dart';
 import 'package:colorful/models/color.dart';
@@ -16,6 +17,7 @@ class HomeViewModel {
   int colorsCount = 5;
   ColorModel? baseColor;
   ALGO algo = ALGO.monochrome;
+  QRViewController? qrViewController;
   late Future<List<cs.ColorScheme>?> currentScheme;
   HomeViewModel() {
     this.currentScheme =
@@ -41,4 +43,7 @@ class HomeViewModel {
     _exportService.copyToClipboard(context, content);
     Navigator.of(context).pop();
   }
+
+  cs.ColorScheme importFromQrCode(BuildContext context, String scannedData) =>
+      _exportService.importSchemeFromQRCode(context, scannedData);
 }
