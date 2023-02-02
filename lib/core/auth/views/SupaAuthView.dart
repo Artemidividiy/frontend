@@ -39,7 +39,7 @@ class _SupaAuthViewState extends State<SupaAuthView> {
 
   void push(AuthResponse response, BuildContext context) async {
     LocalUser.instance = LocalUser(
-        email: response.user!.email!, password: null, uuid: response.user!.id);
+        email: response.user!.email!, password: "", uuid: response.user!.id);
     await widget.vm.registerNewUser(user: LocalUser.instance!);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => DecidePage()));

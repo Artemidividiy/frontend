@@ -1,3 +1,4 @@
+import 'package:colorful/core/auth/views/AuthView.dart';
 import 'package:colorful/core/entry/views/decide_page.dart';
 import 'package:colorful/models/LocalUser.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,7 @@ class SplashView extends StatelessWidget {
                 snapshot.data != null) return DecidePage();
 
             if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.data == null)
-              return SupaAuthView(
-                vm: vm,
-              );
+                snapshot.data == null) return AuthView();
             return CircularProgressIndicator();
           },
         ),

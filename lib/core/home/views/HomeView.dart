@@ -9,14 +9,14 @@ import 'package:numberpicker/numberpicker.dart';
 
 import '../../../enums/algo.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeViewState extends State<HomeView> {
   HomeViewModel vm = HomeViewModel();
   late Future<List<cs.ColorScheme>?> currentScheme;
   late List<bool> isOpened;
@@ -186,9 +186,11 @@ class _HomePageState extends State<HomePage> {
                         onQRViewCreated: (p0) {
                           vm.qrViewController = p0;
                           vm.qrViewController?.scannedDataStream.listen((data) {
-                            currentScheme = Future.value([
-                              vm.importFromQrCode(context, data.code ?? "")
-                            ]);
+                            setState(() {
+                              currentScheme = Future.value([
+                                vm.importFromQrCode(context, data.code ?? "")
+                              ]);
+                            });
                           });
                         },
                       ),

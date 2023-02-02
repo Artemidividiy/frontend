@@ -15,8 +15,12 @@ class NetworkService {
     authRes = await Supabase.instance.client.auth;
   }
 
-  Future getUserFromNetwork() async {
-    throw UnimplementedError();
+  Future authenticateUser(String email, String password) async {
+    if (LocalUser.instance == null) throw NullThrownError();
+    final AuthResponse res = await authRes.signInWithPassword(
+        email: LocalUser.instance?.email,
+        password: LocalUser.instance?.password ?? "");
+    return res.user != null;
   }
 
   Future saveUserToNetwork() async {

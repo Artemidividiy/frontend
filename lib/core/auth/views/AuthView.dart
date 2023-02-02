@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:colorful/core/auth/viewmodels/AuthViewModel.dart';
+import 'package:colorful/core/entry/views/decide_page.dart';
+import 'package:colorful/models/LocalUser.dart';
 import 'package:flutter/material.dart';
 
 class AuthView extends StatefulWidget {
@@ -9,6 +14,7 @@ class AuthView extends StatefulWidget {
 
 class _AuthViewState extends State<AuthView> {
   bool _isLogInView = true;
+  AuthViewModel vm = AuthViewModel();
   switchScreen() {
     setState(() {
       _isLogInView = !_isLogInView;
@@ -22,18 +28,19 @@ class _AuthViewState extends State<AuthView> {
             child: _isLogInView
                 ? _LoginView(
                     switchView: switchScreen,
+                    vm: vm,
                   )
-                : _RegisterView(
-                    switchView: switchScreen,
-                  )));
+                : _RegisterView(switchView: switchScreen, vm: vm)));
   }
 }
 
 class _LoginView extends StatefulWidget {
+  final AuthViewModel vm;
   final Function switchView;
   _LoginView({
     Key? key,
     required this.switchView,
+    required this.vm,
   }) : super(key: key);
 
   @override
@@ -75,16 +82,25 @@ class _LoginViewState extends State<_LoginView> {
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.transparent)),
           ),
-          TextButton(onPressed: () => null, child: Text("Authenticate"))
+          TextButton(
+              onPressed: () => authenticate(), child: Text("Authenticate"))
         ],
       ),
     ));
+  }
+
+  void authenticate() async {
+    widget.vm
+        .authenticateUser(_loginController.text, _passwordController.text)
+        .then((value) => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => DecidePage())));
   }
 }
 
 class _RegisterView extends StatefulWidget {
   final Function switchView;
-  const _RegisterView({super.key, required this.switchView});
+  final AuthViewModel vm;
+  const _RegisterView({super.key, required this.switchView, required this.vm});
 
   @override
   State<_RegisterView> createState() => _RegisterViewState();
@@ -97,7 +113,7 @@ class _RegisterViewState extends State<_RegisterView> {
   final TextEditingController _passwordConfirmationController =
       TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  String? validate() {}
+
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) return "cannot be empty";
     if (value.length < 8) return "too simple";
@@ -168,6 +184,15 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 
   register() {
-    formkey.currentState!.validate();
+    if (formkey.currentState!.validate()) {
+      widget.vm.registerNewUser(
+          user: LocalUser(
+              password: _passwordController.text,
+              email: _emailController.text,
+              uuid: <String>[RegExp(r'[a-z]').toString()].toString()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => DecidePage(),
+      ));
+    }
   }
 }

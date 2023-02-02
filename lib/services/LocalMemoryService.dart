@@ -30,4 +30,8 @@ class LocalMemoryService {
       log("error while saving", error: e);
     }
   }
+
+  Future logOut() async {
+    await _secureStorageInstance.delete(key: "current user");
+  }
 }

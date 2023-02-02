@@ -2,7 +2,8 @@ import 'dart:developer';
 import 'package:colorful/constants/EntryViewconstants.dart';
 import 'package:colorful/core/entry/viewmodels/EntryViewModel.dart';
 import 'package:colorful/core/entry/views/decide_card.dart';
-import 'package:colorful/core/home/views/HomePage.dart';
+import 'package:colorful/core/home/views/HomeView.dart';
+import 'package:colorful/core/home/views/HomeWrapperView.dart';
 import 'package:colorful/models/LocalUser.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
@@ -54,7 +55,7 @@ class _DecidePageState extends State<DecidePage> {
                     log("finished");
                     Navigator.of(context).pushReplacement(PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          HomePage(),
+                          HomeWrapperView(),
                     ));
                   },
                   itemBuilder: (context, index) =>
