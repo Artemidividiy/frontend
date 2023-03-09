@@ -1,23 +1,30 @@
 import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
+import 'package:colorful/core/user/views/UserView.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../user/viewmodels/UserViewModel.dart';
+
 class ExportSchemeView extends StatefulWidget {
-  final HomeViewModel vm;
-  const ExportSchemeView({super.key, required this.vm});
+  final HomeViewModel? vm;
+  final UserViewModel? uvm;
+  const ExportSchemeView({super.key, this.vm, this.uvm})
+      : assert(vm != null || uvm != null);
 
   @override
   State<ExportSchemeView> createState() => _ExportSchemeViewState();
 }
 
 class _ExportSchemeViewState extends State<ExportSchemeView> {
-  late HomeViewModel vm;
+  late HomeViewModel? vm;
+  late UserViewModel? uvm;
   late ValueNotifier<String?> cssTextNotifier;
   List selectedValues = [false, false, false];
   double height = 100;
   @override
   void initState() {
     vm = widget.vm;
+    uvm = widget.uvm;
     cssTextNotifier = ValueNotifier(null);
     super.initState();
   }
@@ -48,14 +55,18 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                                     setState(() {
                                       selectedValues[0] = value;
                                     });
-                                    vm.copyToClipboard(context);
+                                    vm != null
+                                        ? vm!.copyToClipboard(context)
+                                        : uvm!.copyToClipboard(context);
                                   },
                                   label: Text("copy to clipboard")),
                               ChoiceChip(
                                   selected: selectedValues[1],
                                   onSelected: (value) async {
                                     cssTextNotifier = ValueNotifier<String>(
-                                        await vm.exportScheme());
+                                        vm != null
+                                            ? await vm!.exportScheme()
+                                            : await uvm!.exportScheme());
                                     setState(() {
                                       selectedValues[1] = value;
                                       height = 400;
@@ -66,12 +77,17 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                                   selected: selectedValues[2],
                                   onSelected: (value) async {
                                     cssTextNotifier = ValueNotifier<String>(
-                                        "qr-" +
-                                            (await vm.currentScheme)!
-                                                .toList()
-                                                .first
-                                                .toJson()
-                                                .toString());
+                                        vm != null
+                                            ? "qr-" +
+                                                (await vm!.currentScheme)!
+                                                    .toList()
+                                                    .first
+                                                    .toJson()
+                                                    .toString()
+                                            : "qr-" +
+                                                UserViewModel.currentScheme!
+                                                    .toJson()
+                                                    .toString());
                                     setState(() {
                                       height = 450;
                                       selectedValues[2] = value;
@@ -95,8 +111,9 @@ class _ExportSchemeViewState extends State<ExportSchemeView> {
                         children: [
                           Text(value),
                           IconButton(
-                              onPressed: () =>
-                                  vm.copyTextToClipboard(context, value),
+                              onPressed: () => vm != null
+                                  ? vm!.copyTextToClipboard(context, value)
+                                  : uvm!.copyTextToClipboard(context, value),
                               icon: Icon(Icons.copy_all))
                         ],
                       ),

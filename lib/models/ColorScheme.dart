@@ -43,10 +43,11 @@ class ColorScheme {
   }
 
   factory ColorScheme.fromMap(Map<String, dynamic> map) {
+    var colors =
+        List<ColorModel>.from(map['colors']?.map((x) => ColorModel.fromMap(x)));
     return ColorScheme(
-      colors: List<ColorModel>.from(
-          map['colors']?.map((x) => ColorModel.fromMap(x))),
-      colorCount: map['colorCount']?.toInt() ?? 0,
+      colors: colors,
+      colorCount: map['colorCount']?.toInt() ?? colors.length,
       schemeAlgo: stringToAlgo(map['schemeAlgo'] ?? map['algo']["name"]),
       id: map["id"],
     );

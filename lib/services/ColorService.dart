@@ -148,8 +148,8 @@ class ColorService {
         "/liked/" +
         LocalUser.instance!.id!.toString()));
     var body = json.decode(res.body);
-    Future<List<cs.ColorScheme>> target = Future.value(List.generate(
-        body.length, (index) => cs.ColorScheme.fromMap(body[index])));
+    List<cs.ColorScheme> target = List.generate(
+        body.length, (index) => cs.ColorScheme.fromMap(body[index]));
     return target;
   }
 }
