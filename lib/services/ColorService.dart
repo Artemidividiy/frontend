@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants/EntryViewconstants.dart';
 import '../enums/algo.dart';
+import '../models/LocalUser.dart';
 import '../models/color.dart';
 import '../constants/ColorsAPIConstants.dart';
 import '../utilities/AlgoUtils.dart';
 import '../utilities/ColorParser.dart';
 import '../utilities/color_generator_local.dart';
 import '../models/ColorScheme.dart' as cs;
+import '../constants/FAConstants.dart' as fastApiConstants;
 
 mixin parser {
   static parse(Map<String, dynamic> map) {
@@ -93,6 +95,9 @@ class ColorService {
       }
       target.add(cs.ColorScheme.fromListColors(tmp, algo));
     }
+    for (var element in target) {
+      element.id = await postColorSchemeToDataBase(scheme: element);
+    }
     return target;
   }
 
@@ -101,5 +106,50 @@ class ColorService {
         rgb: Group([map['rgb']['r'], map['rgb']['g'], map['rgb']['b']]),
         color: Color(int.parse("0xFF" + map['hex']['clean'])),
         name: map['name']['value']);
+  }
+
+  likeScheme({required cs.ColorScheme scheme}) async {
+    try {
+      var req = await http.post(Uri.parse(fastApiConstants.BASE_URL +
+          '/like/${scheme.id}/${LocalUser.instance!.id!}'));
+      req.statusCode == 200 ? log("liked") : log("server error");
+    } catch (e) {
+      log("error liking", error: e);
+    }
+  }
+
+  postColorSchemeToDataBase({required cs.ColorScheme scheme}) async {
+    try {
+      log(scheme.toApiJson());
+      var req = await http.post(
+        Uri.parse(
+            fastApiConstants.BASE_URL + "/schema/${LocalUser.instance!.id}"),
+        body: scheme.toApiJson(),
+        headers: {"content-type": "application/json"},
+      );
+      if (req.statusCode != 200) throw "NOT 200 STATUS CODE";
+      log("posted successfully");
+      return json.decode(req.body);
+    } catch (e) {
+      log("posted with error", error: e);
+    }
+  }
+
+  dislikeScheme({required cs.ColorScheme scheme}) async {
+    var req = await http.post(Uri.parse(fastApiConstants.BASE_URL +
+        '/dislike/' +
+        scheme.id!.toString() +
+        "/" +
+        LocalUser.instance!.id!.toString()));
+  }
+
+  Future<List<cs.ColorScheme>> fetchLikedSchemas() async {
+    var res = await http.get(Uri.parse(fastApiConstants.BASE_URL +
+        "/liked/" +
+        LocalUser.instance!.id!.toString()));
+    var body = json.decode(res.body);
+    Future<List<cs.ColorScheme>> target = Future.value(List.generate(
+        body.length, (index) => cs.ColorScheme.fromMap(body[index])));
+    return target;
   }
 }

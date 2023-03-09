@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:colorful/models/LocalUser.dart';
+
 class User {
   String uuid;
   User({
@@ -14,9 +16,11 @@ class User {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap(bool? authorized) {
     return {
-      'uuid': uuid,
+      "email": LocalUser.instance!.email,
+      "password": LocalUser.instance!.password,
+      "authorized": authorized
     };
   }
 
@@ -26,7 +30,7 @@ class User {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson(bool? authorized) => json.encode(toMap(authorized));
 
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
 

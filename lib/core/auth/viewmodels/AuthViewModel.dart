@@ -14,14 +14,13 @@ class AuthViewModel {
   }
 
   registerNewUser({required LocalUser user}) async {
-    LocalUser.instance = user;
     await _localMemoryService.saveUserToMemory();
-    await _networkService.saveUserToNetwork();
+    await _networkService.authenticateUser(user.email, user.password!, false);
   }
 
   Future authenticateUser(String email, String password) async {
     LocalUser.instance = LocalUser(password: password, email: email, uuid: "");
-    await _networkService.authenticateUser(email, password);
+    await _networkService.authenticateUser(email, password, true);
     await _localMemoryService.saveUserToMemory();
   }
 }

@@ -20,6 +20,7 @@ class _HomeViewState extends State<HomeView> {
   HomeViewModel vm = HomeViewModel();
   late Future<List<cs.ColorScheme>?> currentScheme;
   late List<bool> isOpened;
+  bool liked = false;
   ALGO algo = ALGO.monochrome;
   late ValueNotifier<Future<List<cs.ColorScheme>?>> notifier =
       ValueNotifier<Future<List<cs.ColorScheme>?>>(vm.fetch());
@@ -58,6 +59,7 @@ class _HomeViewState extends State<HomeView> {
                                   vm.algo = ALGO.monochrome;
                                   algo = ALGO.monochrome;
                                   currentScheme = vm.fetch();
+                                  liked = false;
                                 });
                                 notifier.value = currentScheme;
                               }),
@@ -69,6 +71,7 @@ class _HomeViewState extends State<HomeView> {
                                   vm.algo = ALGO.analogic;
                                   algo = ALGO.analogic;
                                   currentScheme = vm.fetch();
+                                  liked = false;
                                 });
                                 notifier.value = currentScheme;
                               }),
@@ -80,6 +83,7 @@ class _HomeViewState extends State<HomeView> {
                                   vm.algo = ALGO.complement;
                                   algo = ALGO.complement;
                                   currentScheme = vm.fetch();
+                                  liked = false;
                                 });
                                 notifier.value = currentScheme;
                               }),
@@ -93,6 +97,7 @@ class _HomeViewState extends State<HomeView> {
                                   vm.algo = ALGO.analogicComplement;
                                   algo = ALGO.analogicComplement;
                                   currentScheme = vm.fetch();
+                                  liked = false;
                                 });
                                 notifier.value = currentScheme;
                               }),
@@ -104,6 +109,7 @@ class _HomeViewState extends State<HomeView> {
                                   vm.algo = ALGO.triad;
                                   algo = ALGO.triad;
                                   currentScheme = vm.fetch();
+                                  liked = false;
                                 });
                                 notifier.value = currentScheme;
                               }),
@@ -114,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
                                 setState(() {
                                   vm.algo = ALGO.quad;
                                   algo = ALGO.quad;
-
+                                  liked = false;
                                   currentScheme = vm.fetch();
                                 });
                               }),
@@ -130,6 +136,7 @@ class _HomeViewState extends State<HomeView> {
                         onChanged: (value) async {
                           setState(() {
                             vm.colorsCount = value;
+                            liked = false;
                           });
                           vm.fetch().then((value) {
                             currentScheme = Future.value(value);
@@ -142,10 +149,6 @@ class _HomeViewState extends State<HomeView> {
             );
           },
         ),
-        // setState(() {
-        //   vm.currentScheme = vm.fetch();
-        //   currentScheme = vm.currentScheme;
-        // }),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -172,6 +175,32 @@ class _HomeViewState extends State<HomeView> {
                           return const Center(
                               child: const CircularProgressIndicator());
                         })),
+            IconButton(
+                onPressed: () async {
+                  if (liked) {
+                    setState(() {
+                      liked = false;
+                    });
+                    await vm.dislikeScheme();
+                  } else {
+                    setState(() {
+                      liked = true;
+                    });
+                    await vm.likeScheme();
+                  }
+                },
+                icon: AnimatedContainer(
+                  duration: Duration(milliseconds: 125),
+                  child: liked
+                      ? Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          color: Colors.grey,
+                        ),
+                )),
             TextButton(
                 onPressed: () => showModalBottomSheet(
                       context: context,

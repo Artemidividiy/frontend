@@ -1,34 +1,25 @@
+import 'dart:convert';
+
 import 'package:colorful/models/ColorScheme.dart';
 import 'package:colorful/models/LocalUser.dart';
 import 'package:colorful/models/NetworkUser.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../constants/FAConstants.dart' as faConst;
+import 'package:http/http.dart' as http;
 
-//TODO: Переписать с хуйни в лютой альфе на нормальную версию
+//TODO: я забыл переписать (это повторится)
 class NetworkService {
-  late GoTrueClient authRes;
-  Session? session;
-
-  NetworkService() {
-    init();
-  }
-  void init() async {
-    authRes = await Supabase.instance.client.auth;
-  }
-
-  Future authenticateUser(String email, String password) async {
+  NetworkService();
+  Future authenticateUser(
+      String email, String password, bool authorized) async {
     if (LocalUser.instance == null) throw NullThrownError();
-    final AuthResponse res = await authRes.signInWithPassword(
-        email: LocalUser.instance?.email,
-        password: LocalUser.instance?.password ?? "");
-    return res.user != null;
-  }
-
-  Future saveUserToNetwork() async {
-    var tmp = await authRes.signUp(
-        email: LocalUser.instance!.email,
-        password: LocalUser.instance!.password!);
-    session = tmp.session;
-    // NetworkUser user = tmp.user;
+    var res = await http.post(
+      Uri.parse("${faConst.BASE_URL}/user"),
+      headers: {"content-type": "application/json"},
+      body: LocalUser.instance!.toJson(authorized),
+    );
+    LocalUser.instance!.id = json.decode(res.body);
+    return json.decode(res.body) != null;
   }
 
   Future getColorSchemasListFromNet() async {

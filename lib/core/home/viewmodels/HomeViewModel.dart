@@ -30,6 +30,15 @@ class HomeViewModel {
     // currentScheme = target;
   }
 
+  Future likeScheme() async {
+    await _colorService.likeScheme(
+        scheme: (await currentScheme)![0]);
+  }
+
+  Future dislikeScheme() async {
+    await _colorService.dislikeScheme(scheme: (await currentScheme)![0]);
+  }
+
   Future<String> exportScheme() async {
     return _exportService.generateCSS((await currentScheme)!.first);
   }

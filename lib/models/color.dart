@@ -101,17 +101,47 @@ class ColorModel {
     };
   }
 
+  Map<String, dynamic> toApiMap() => {
+        "name": name,
+        "hex": toHexString(),
+        "rgb": [
+          rgb![0].round(),
+          rgb![1].round(),
+          rgb![2].round(),
+        ]
+      };
+
   factory ColorModel.fromMap(Map<String, dynamic> map) {
     return ColorModel(
-      color: Color(map['color']),
-      rgb: Group.fromMap(map['rgb']),
-      hsv: Group.fromMap(map['hsv']),
-      cmyk: Group.fromMap(map['cmyk']),
+      color: Color.fromARGB(255, map["rgb"][0], map["rgb"][1], map["rgb"][2]),
+      rgb: Group([
+        map["rgb"][0].toDouble(),
+        map["rgb"][1].toDouble(),
+        map["rgb"][2].toDouble()
+      ]),
+      hsv: ColorParser.rgbToHsv(
+        rgb: Group([
+          map["rgb"][0].toDouble(),
+          map["rgb"][1].toDouble(),
+          map["rgb"][2].toDouble()
+        ]),
+      ),
+      cmyk: ColorParser.rgbToCmyk(
+        rgb: Group([
+          map["rgb"][0].toDouble(),
+          map["rgb"][1].toDouble(),
+          map["rgb"][2].toDouble()
+        ]),
+      ),
       name: map['name'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
+
+  String toApiJson() {
+    return json.encode(toApiMap());
+  }
 
   factory ColorModel.fromJson(String source) =>
       ColorModel.fromMap(json.decode(source));
