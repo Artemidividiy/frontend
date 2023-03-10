@@ -31,8 +31,7 @@ class HomeViewModel {
   }
 
   Future likeScheme() async {
-    await _colorService.likeScheme(
-        scheme: (await currentScheme)![0]);
+    await _colorService.likeScheme(scheme: (await currentScheme)![0]);
   }
 
   Future dislikeScheme() async {
@@ -55,4 +54,9 @@ class HomeViewModel {
 
   cs.ColorScheme importFromQrCode(BuildContext context, String scannedData) =>
       _exportService.importSchemeFromQRCode(context, scannedData);
+
+  Future removeColorFromScheme(BuildContext context, int index) async {
+    log("trying to remove");
+    (await currentScheme)!.removeAt(index);
+  }
 }

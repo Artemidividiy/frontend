@@ -1,8 +1,9 @@
 import 'package:colorful/utilities/ExportUtils.dart';
 import 'package:flutter/material.dart';
 import '../../models/ColorScheme.dart' as cs;
-import '../../models/color.dart';
+import '../../models/color.dart' as cm;
 import '../../utilities/color_generator_local.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ExpandableTile extends StatefulWidget {
   final Widget? header;
@@ -20,9 +21,11 @@ class ExpandableTile extends StatefulWidget {
 
 class _ExpandableTileState extends State<ExpandableTile> {
   late bool isExpanded;
+  late bool isRemoved;
   @override
   void initState() {
     isExpanded = false;
+    isRemoved = false;
     super.initState();
   }
 
@@ -32,14 +35,22 @@ class _ExpandableTileState extends State<ExpandableTile> {
       child: SingleChildScrollView(
         child: Column(children: [
           GestureDetector(
-            onTap: _showBody,
-            child: _ExpandableHeader(
-              content: widget.header ?? Container(),
-            ),
-          ),
+              onDoubleTap: () => setState(() {
+                    isRemoved = true;
+                  }),
+              onTap: _showBody,
+              child: !isRemoved
+                  ? _ExpandableHeader(
+                      content: widget.header ?? Container(),
+                    )
+                  : Container()),
           AnimatedContainer(
               curve: Curves.easeInOutQuart,
-              height: isExpanded ? 400 : 0,
+              height: isRemoved
+                  ? 0
+                  : isExpanded
+                      ? 430
+                      : 0,
               duration: const Duration(milliseconds: 250),
               child: isExpanded
                   ? _ExpandableBody(
@@ -82,9 +93,10 @@ extension Designed on ExpandableTile {
   widget(
       {required BuildContext context,
       required AsyncSnapshot<List<cs.ColorScheme>?> snapshot,
-      required int index}) {
-    Group cmyk = snapshot.data!.first.colors[index].cmyk!;
-    Group hsv = snapshot.data!.first.colors[index].hsv!;
+      required int index,
+      required Function(Color) onChangedMethod}) {
+    cm.Group cmyk = snapshot.data!.first.colors[index].cmyk!;
+    cm.Group hsv = snapshot.data!.first.colors[index].hsv!;
     return ExpandableTile(
         body: Container(
           margin: const EdgeInsets.all(8),
@@ -168,10 +180,10 @@ extension Designed on ExpandableTile {
                         baseColor: snapshot.data!.first.colors[index].color,
                         distance: tindex * 0.3,
                         toBlack: true);
-                    ColorModel tcolor = ColorModel(
+                    cm.ColorModel tcolor = cm.ColorModel(
                         color: temp,
                         name: index.toString(),
-                        rgb: Group([255, 255, 255]));
+                        rgb: cm.Group([255, 255, 255]));
                     return GestureDetector(
                       onTap: () => copyToClipboard(
                           context, temp.value.toRadixString(16)),
@@ -201,7 +213,18 @@ extension Designed on ExpandableTile {
                     .computeLuminance()
                     .toStringAsFixed(6),
                 style: const TextStyle(fontWeight: FontWeight.bold),
-              )
+              ),
+              TextButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: ColorPicker(
+                        pickerColor: snapshot.data!.first.colors[index].color,
+                        onColorChanged: onChangedMethod),
+                  ),
+                ),
+                child: Text("change Color"),
+              ),
             ],
           ),
         ),

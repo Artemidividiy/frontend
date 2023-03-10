@@ -1,7 +1,7 @@
 import 'package:colorful/core/components/expandable_tile.dart';
 import 'package:colorful/core/home/viewmodels/HomeViewModel.dart';
 import 'package:colorful/core/home/views/ExportSchemeView.dart';
-import 'package:colorful/models/color.dart';
+
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../../models/ColorScheme.dart' as cs;
 import 'package:flutter/material.dart';
@@ -166,6 +166,9 @@ class _HomeViewState extends State<HomeView> {
                                   header: null,
                                   body: null,
                                 )).widget(
+                                    onChangedMethod: (n) => setState(() =>
+                                        snapshot.data!.first.colors[index]
+                                            .color = n),
                                     context: context,
                                     snapshot: snapshot,
                                     index: index);

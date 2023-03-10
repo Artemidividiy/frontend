@@ -45,6 +45,8 @@ dependencies:
   numberpicker: ^2.1.1
   qr_flutter: ^4.0.0
   qr_code_scanner: ^1.0.1
+  colorpicker_flutter: 
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:
