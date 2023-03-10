@@ -54,10 +54,7 @@ class _UserViewState extends State<UserView> {
                                   decoration: BoxDecoration(
                                       color: Colors.grey[300],
                                       borderRadius: BorderRadius.circular(8)),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      mainAxisSize: MainAxisSize.min,
+                                  child: Wrap(
                                       children: List.generate(
                                           snapshot.data![iIndex].colorCount,
                                           (jIndex) => Container(

@@ -14,6 +14,7 @@ class AuthViewModel {
   }
 
   registerNewUser({required LocalUser user}) async {
+    LocalUser.instance = user;
     await _localMemoryService.saveUserToMemory();
     await _networkService.authenticateUser(user.email, user.password!, false);
   }

@@ -137,15 +137,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(hintText: "Email"),
-                  obscureText: true,
                   controller: _emailController,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(hintText: "Login"),
-                  controller: _loginController,
                 ),
               ),
               Padding(
