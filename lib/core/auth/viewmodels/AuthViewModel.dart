@@ -1,4 +1,6 @@
+import 'package:colorful/enums/AuthMethod.dart';
 import 'package:colorful/enums/AuthStatus.dart';
+import 'package:colorful/enums/ValidationStatus.dart';
 import 'package:colorful/models/LocalUser.dart';
 
 import 'package:colorful/services/LocalMemoryService.dart';
@@ -23,5 +25,15 @@ class AuthViewModel {
     LocalUser.instance = LocalUser(password: password, email: email, uuid: "");
     await _networkService.authenticateUser(email, password, true);
     await _localMemoryService.saveUserToMemory();
+  }
+
+  Future<ValidationStatus> validateUserData(
+      String email, String password, AuthMethod method) async {
+    switch (method) {
+      case AuthMethod.Login:
+        return await _networkService.fetchUser(email, password);
+      default:
+    }
+    return ValidationStatus.Correct;
   }
 }
