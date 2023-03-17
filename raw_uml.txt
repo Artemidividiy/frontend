@@ -16,10 +16,13 @@ class "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" {
   +QRViewController? qrViewController
   +Future<List<ColorScheme>?> currentScheme
   +Future<List<ColorScheme>?> fetch()
+  +Future<dynamic> likeScheme()
+  +Future<dynamic> dislikeScheme()
   +Future<String> exportScheme()
   +void copyToClipboard()
   +void copyTextToClipboard()
   +ColorScheme importFromQrCode()
+  +Future<dynamic> removeColorFromScheme()
 }
 
 "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "colorful::services::ColorService.dart::ColorService"
@@ -29,15 +32,18 @@ class "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" {
 "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel" o-- "qr_code_scanner::src::qr_code_scanner.dart::QRViewController"
 
 class "colorful::core::home::views::ExportSchemeView.dart::ExportSchemeView" {
-  +HomeViewModel vm
+  +HomeViewModel? vm
+  +UserViewModel? uvm
   +State<ExportSchemeView> createState()
 }
 
 "colorful::core::home::views::ExportSchemeView.dart::ExportSchemeView" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
+"colorful::core::home::views::ExportSchemeView.dart::ExportSchemeView" o-- "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::home::views::ExportSchemeView.dart::ExportSchemeView"
 
 class "colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewState" {
-  +HomeViewModel vm
+  +HomeViewModel? vm
+  +UserViewModel? uvm
   +ValueNotifier<String?> cssTextNotifier
   +List<dynamic> selectedValues
   +double height
@@ -46,6 +52,7 @@ class "colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewStat
 }
 
 "colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewState" o-- "colorful::core::home::viewmodels::HomeViewModel.dart::HomeViewModel"
+"colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewState" o-- "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel"
 "colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewState" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<String>"
 "flutter::src::widgets::framework.dart::State" <|-- "colorful::core::home::views::ExportSchemeView.dart::_ExportSchemeViewState"
 
@@ -92,6 +99,7 @@ class "colorful::core::home::views::HomeView.dart::_HomeViewState" {
   +HomeViewModel vm
   +Future<List<ColorScheme>?> currentScheme
   +List<bool> isOpened
+  +bool liked
   +ALGO algo
   +ValueNotifier<Future<List<ColorScheme>?>> notifier
   +void initState()
@@ -109,6 +117,7 @@ class "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" {
   +Future<LocalUser?> user
   +dynamic registerNewUser()
   +Future<dynamic> authenticateUser()
+  +Future<ValidationStatus> validateUserData()
 }
 
 "colorful::core::auth::viewmodels::AuthViewModel.dart::AuthViewModel" o-- "colorful::services::LocalMemoryService.dart::LocalMemoryService"
@@ -140,12 +149,16 @@ class "colorful::core::auth::views::AuthView.dart::_LoginView" {
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::auth::views::AuthView.dart::_LoginView"
 
 class "colorful::core::auth::views::AuthView.dart::_LoginViewState" {
+  +GlobalKey<FormState> formState
   -TextEditingController _loginController
   -TextEditingController _passwordController
   +Widget build()
+  +String? emailValidator()
+  +String? passwordValidator()
   +void authenticate()
 }
 
+"colorful::core::auth::views::AuthView.dart::_LoginViewState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
 "colorful::core::auth::views::AuthView.dart::_LoginViewState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
 "flutter::src::widgets::framework.dart::State" <|-- "colorful::core::auth::views::AuthView.dart::_LoginViewState"
 
@@ -166,6 +179,7 @@ class "colorful::core::auth::views::AuthView.dart::_RegisterViewState" {
   +GlobalKey<FormState> formkey
   +String? passwordValidator()
   +String? passwordConfirmationValidator()
+  +String? emailValidator()
   +Widget build()
   +dynamic register()
 }
@@ -254,11 +268,21 @@ class "colorful::core::entry::views::decide_page.dart::_DecidePageState" {
 class "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel" {
   -LocalMemoryService _localMemoryService
   +LocalUser? currentUser
+  +Future<List<ColorScheme>>? liked_schemes
+  -ExportService _exportService
+  {static} +ColorScheme? currentScheme
+  +dynamic init()
+  +Future<dynamic> dislikeSchema()
+  +Future<String> exportScheme()
+  +void copyToClipboard()
+  +void copyTextToClipboard()
   +void logout()
 }
 
 "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel" o-- "colorful::services::LocalMemoryService.dart::LocalMemoryService"
 "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel" o-- "colorful::models::LocalUser.dart::LocalUser"
+"colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel" o-- "colorful::services::ExportService.dart::ExportService"
+"colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel" o-- "colorful::models::ColorScheme.dart::ColorScheme"
 
 class "colorful::core::user::views::UserView.dart::UserView" {
   +UserViewModel vm
@@ -269,10 +293,27 @@ class "colorful::core::user::views::UserView.dart::UserView" {
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::user::views::UserView.dart::UserView"
 
 class "colorful::core::user::views::UserView.dart::_UserViewState" {
+  +void initState()
   +Widget build()
 }
 
 "flutter::src::widgets::framework.dart::State" <|-- "colorful::core::user::views::UserView.dart::_UserViewState"
+
+class "colorful::core::user::views::UserView.dart::_Preferences" {
+  +UserViewModel vm
+  +ColorScheme scheme
+  +State<_Preferences> createState()
+}
+
+"colorful::core::user::views::UserView.dart::_Preferences" o-- "colorful::core::user::viewmodels::UserViewModel.dart::UserViewModel"
+"colorful::core::user::views::UserView.dart::_Preferences" o-- "colorful::models::ColorScheme.dart::ColorScheme"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "colorful::core::user::views::UserView.dart::_Preferences"
+
+class "colorful::core::user::views::UserView.dart::__PreferencesState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "colorful::core::user::views::UserView.dart::__PreferencesState"
 
 class "colorful::core::components::expandable_tile.dart::ExpandableTile" {
   +Widget? header
@@ -285,6 +326,7 @@ class "colorful::core::components::expandable_tile.dart::ExpandableTile" {
 
 class "colorful::core::components::expandable_tile.dart::_ExpandableTileState" {
   +bool isExpanded
+  +bool isRemoved
   +void initState()
   +Widget build()
   -void _showBody()
@@ -313,6 +355,16 @@ class "colorful::core::components::list_color_tile.dart::ColorTileList" {
 }
 
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "colorful::core::components::list_color_tile.dart::ColorTileList"
+
+class "colorful::enums::AuthMethod.dart::AuthMethod" {
+  +int index
+  {static} +List<AuthMethod> values
+  {static} +AuthMethod Login
+  {static} +AuthMethod Registration
+}
+
+"colorful::enums::AuthMethod.dart::AuthMethod" o-- "colorful::enums::AuthMethod.dart::AuthMethod"
+"dart::core::Enum" <|-- "colorful::enums::AuthMethod.dart::AuthMethod"
 
 class "colorful::enums::AuthStatus.dart::AuthStatus" {
   +int index
@@ -355,6 +407,17 @@ class "colorful::enums::status.dart::Status" {
 "colorful::enums::status.dart::Status" o-- "colorful::enums::status.dart::Status"
 "dart::core::Enum" <|-- "colorful::enums::status.dart::Status"
 
+class "colorful::enums::ValidationStatus.dart::ValidationStatus" {
+  +int index
+  {static} +List<ValidationStatus> values
+  {static} +ValidationStatus Correct
+  {static} +ValidationStatus WrongPassword
+  {static} +ValidationStatus EmailNotFound
+}
+
+"colorful::enums::ValidationStatus.dart::ValidationStatus" o-- "colorful::enums::ValidationStatus.dart::ValidationStatus"
+"dart::core::Enum" <|-- "colorful::enums::ValidationStatus.dart::ValidationStatus"
+
 class "colorful::models::NetworkUser.dart::NetworkUser" {
 }
 
@@ -372,6 +435,7 @@ class "colorful::models::LocalUser.dart::LocalUser" {
   {static} +LocalUser? instance
   +String? password
   +String email
+  +int? id
   +String toString()
   {static} +LocalUser? fromString()
 }
@@ -390,6 +454,7 @@ class "colorful::models::Hex.dart::Hex" {
 }
 
 class "colorful::models::ColorScheme.dart::ColorScheme" {
+  +int? id
   +List<ColorModel> colors
   +int colorCount
   +ALGO schemeAlgo
@@ -397,6 +462,7 @@ class "colorful::models::ColorScheme.dart::ColorScheme" {
   +ColorScheme copyWith()
   +Map<String, dynamic> toMap()
   +String toJson()
+  +String toApiJson()
   +String toString()
   +bool ==()
 }
@@ -423,7 +489,9 @@ class "colorful::models::color.dart::ColorModel" {
   +int hashCode
   +ColorModel copyWith()
   +Map<String, dynamic> toMap()
+  +Map<String, dynamic> toApiMap()
   +String toJson()
+  +String toApiJson()
   +String toString()
   +bool ==()
   +Future<ColorModel> getColor()
@@ -473,6 +541,10 @@ class "colorful::services::ColorService.dart::ColorService" {
   +Future<List<ColorModel>?> getRandomColorsWithAlgo()
   +Future<List<ColorScheme>> getMultipleColorSchemes()
   -dynamic _parse()
+  +dynamic likeScheme()
+  +dynamic postColorSchemeToDataBase()
+  +dynamic dislikeScheme()
+  +Future<List<ColorScheme>> fetchLikedSchemas()
 }
 
 abstract class "colorful::services::ColorService.dart::parser" {
@@ -480,17 +552,11 @@ abstract class "colorful::services::ColorService.dart::parser" {
 }
 
 class "colorful::services::NetworkService.dart::NetworkService" {
-  +GoTrueClient authRes
-  +Session? session
-  +void init()
+  +Future<dynamic> fetchUser()
   +Future<dynamic> authenticateUser()
-  +Future<dynamic> saveUserToNetwork()
   +Future<dynamic> getColorSchemasListFromNet()
   +Future<dynamic> saveColorSchemeToNetwork()
 }
-
-"colorful::services::NetworkService.dart::NetworkService" o-- "gotrue::src::gotrue_client.dart::GoTrueClient"
-"colorful::services::NetworkService.dart::NetworkService" o-- "gotrue::src::types::session.dart::Session"
 
 class "colorful::services::LocalMemoryService.dart::LocalMemoryService" {
   -FlutterSecureStorage _secureStorageInstance
